@@ -74,6 +74,10 @@ The damage calculated by Narrow Band method is given by Palmgren-Miner applied t
 <p align=center>
 <img src="images/DNB.png" width=280>
 </p>
+
+<p align=center>
+<img src="https://render.githubusercontent.com/render/math?math=\overline{D}_{NB} = \nu_0C^{-1}\left(\sqrt{2m_0}\right)^k\Gamma\left(1+\frac{k}{2}\right)">
+</p>
 Following code shows how this is done.
 
 ```
