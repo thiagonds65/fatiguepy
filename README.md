@@ -73,7 +73,7 @@ pp = NB.PDPeaks(s)
 The damage calculated by Narrow Band method is given by Palmgren-Miner applied to graph or given by the following equation:
 
 <p align=center>
-<img src="https://render.githubusercontent.com/render/math?math=\overline{D}_{NB} = \nu_0C^{-1}\left(\sqrt{2m_0}\right)^k\Gamma\left(1 + \frac{k}{2}\right)">
+<img src="https://render.githubusercontent.com/render/math?math=\overline{D}_{NB} = \nu_0C^{-1}\left(\sqrt{2m_0}\right)^k\Gamma\left(1 - \frac{k}{2}\right)">
 </p>
 Following code shows how this is done.
 
