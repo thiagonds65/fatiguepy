@@ -15,7 +15,7 @@ So, you need Power Spectral Density. To test this package, sum of sinusoid will 
 
 ```
 >>>import numpy as np
-
+>>>
 >>>x = np.linspace(0, 1000, 100000)
 >>>y = 100 * np.sin(2 * np.pi * 5 * x) + 70 * np.cos(w2 = 2 * np.pi * 10 * x) + 90 * np.sin(2 * np.pi * 20 * x)
 >>>Y = np.fft.fft(y)
