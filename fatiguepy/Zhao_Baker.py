@@ -1,21 +1,29 @@
 import numpy as np
 import math
+from fatiguepy import prob_moment
+
 class ZB:
     def __new__(cls, *args, **kwargs):
         instance = super(ZB, cls).__new__(cls)
         return instance
 
-    def __init__(self, m0, m1, m2, m4, alpha2, s, k, C, EP, xf):
-        self.m0 = m0
-        self.m1 = m1
-        self.m2 = m2
-        self.m4 = m4
-        self.alpha2 = alpha2
-        self.s = s
+    def __init__(self, k, C, Y, f, xf, s, zb):
+        self.Y = Y
+        self.f = f
+        moments = prob_moment.Probability_Moment(self.Y, self.f)
+        self.m0 = moments.moment0()
+        self.m1 = moments.moment1()
+        self.m2 = moments.moment2()
+        self.m4 = moments.moment4()
+        self.m75 = moments.moment0dot75()
+        self.m15 = moments.moment1dot5()
+        self.alpha2 = moments.alpha2()
         self.k = k
         self.C = C
-        self.EP = EP
+        self.EP = moments.EP()
         self.xf = xf
+        self.zb = zb
+        self.s = s
 
     def beta(self):
         if self.alpha2<0.9:
@@ -27,33 +35,55 @@ class ZB:
 
     def PDF(self):
         z = self.s / (2*np.sqrt(self.m0))
-        beta = ZB(self.m0, self.m1, self.m2, self.m4, self.alpha2, self.s, self.k, self.C, self.EP, self.xf).beta()
-        alpha = 8 - 7*self.alpha2
+        beta = ZB(self.k, self.C, self.Y, self.f, self.xf, self.s, self.zb).beta()
         EGFbeta = math.gamma(1 + 1/beta)
+        EGF3beta = math.gamma(1+3/beta)
+
+        if self.zb==1:
+            alpha = 8 - 7*self.alpha2 #for ZB1
+        elif self.zb==2:
+            
+            alpha75 = self.m75/(np.sqrt(self.m0*self.m15))
+            print(f"alpha75 = {alpha75}")
+            if alpha75 < 0.5:
+                roZB = 0.28
+            else:
+                roZB = -0.4154 + 1.392*self.alpha2
+            d = 0
+            for i in range(10):
+                d = d - (EGF3beta*(1-self.alpha2**2)*d**3+3*EGFbeta*(roZB*self.alpha2-1)*d+3*np.sqrt(np.pi/2)*self.alpha2*(1-roZB))\
+                    /(3*EGF3beta*(1-self.alpha2**2)*d**2+3*EGFbeta*(roZB*self.alpha2-1))
+                alpha = d**(-beta)
+
         w = (1 - self.alpha2)/(1 - math.sqrt(2/math.pi)*EGFbeta*alpha**(-1/beta))
 
-        ps = w*alpha*beta*z**(beta - 1)*np.exp(-alpha*z**beta) + (1-w)*z*np.exp((-z**2)/2) 
-        # Abaixo contem a equacao do metodo Dirlik pelo artigo Matjaz
-        # ps = ((G1/Q)*np.exp(-z/Q) + (G2*z/R**2)*np.exp(-z**2/(R**2))+G3*z*np.exp(-z**2/2))/(np.sqrt(self.m0))
+        ps = (w*alpha*beta*z**(beta - 1)*np.exp(-alpha*z**beta) + (1-w)*z*np.exp((-z**2)/2)/(2*np.sqrt(self.m0))) 
+        
+        integ = 0
+        ds = self.s[1] - self.s[0]
+        for i in range(len(self.s)):
+            integ += ps[i]*ds
+        ps = ps/integ
+
         return ps
 
     def Damage(self):
-        beta = ZB(self.m0, self.m1, self.m2, self.m4, self.alpha2, self.s, self.k, self.C, self.EP, self.xf).beta()
-        alpha = 8 - 7*self.alpha2
-        EGFbeta = math.gamma(1 + 1/beta)
-        EGFk = math.gamma(1 + self.k/beta)
-        EGFk2 = math.gamma(1 + self.k/2)
-        w = (1 - self.alpha2)/(1 - math.sqrt(2/math.pi)*EGFbeta*alpha**(-1/beta))
+        ps = self.PDF()
+        ds = self.s[1] - self.s[0]
+        DZB = 0
+        for i in range(1,len(ps)):
+            DZB += abs(self.EP*(self.C**(-1))*(self.s[i]**self.k)*ps[i]*ds)
 
-        DZB = (self.EP/self.C)*self.m0**(self.k/2)*(w*alpha**(-self.k/beta)*EGFk+(1-w)*2**(self.k/2)*EGFk2)
         return DZB
 
-    def Life(self):
-        TZB = 1 / ZB(self.m0, self.m1, self.m2, self.m4, self.alpha2, self.s, self.k, self.C, self.EP, self.xf).Damage()
+    def Lifes(self):
+        TZB = 1 / self.Damage()
         return TZB
 
     def Lifeh(self):
-        TZBh = self.xf * \
-               ZB(self.m0, self.m1, self.m2, self.m4, self.alpha2, self.s, self.k, self.C, self.EP, self.xf).Life() \
-               / (60 * 60)
+        TZBh = self.Lifes()/(3600)
         return TZBh
+
+    def Life(self):
+        TZB = self.Lifes()/self.xf
+        return TZB

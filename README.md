@@ -20,7 +20,7 @@ So, you need Power Spectral Density. To test this package, sum of sinusoid will 
 >>>y = 100 * np.sin(2 * np.pi * 5 * x) + 70 * np.cos(w2 = 2 * np.pi * 10 * x) + 90 * np.sin(2 * np.pi * 20 * x)
 >>>Y = np.fft.fft(y)
 >>>Y = 2.0 * np.abs(Y / len(Y))
->>>f = np.fft.fftfreq(len(Y)) * n / xf * 2 * np.pi    
+>>>f = np.fft.fftfreq(len(Y)) * n / xf * 2 * np.pi
 >>>mask = f > 0
 ```
 

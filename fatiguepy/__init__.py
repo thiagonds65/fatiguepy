@@ -1,4 +1,4 @@
-__all__ = ['prob_moment', 'prob_dist_peaks', 'Rainflow', 
+__all__ = ['prob_moment', 'Rainflow', 
             'Narrow_Band', 'Wirsching_Light', 
             'Dirlik', 'Zhao_Baker']
 

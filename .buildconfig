@@ -1,0 +1,10 @@
+[default]
+name=Default
+runtime=host
+config-opts=
+run-opts=
+prefix=/home/thiago/.cache/gnome-builder/install/fatigue_frequency_domain_methods_package/host
+app-id=
+postbuild=
+prebuild=
+default=true

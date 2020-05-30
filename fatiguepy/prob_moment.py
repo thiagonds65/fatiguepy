@@ -7,54 +7,74 @@ class Probability_Moment:
         return instance
 
     def __init__(self, Y, f):
-        self.Y = 2*Y #Visto em Benasciutti Tovo sobre one-sided spectral density
+        self.Y = Y #Visto em Benasciutti Tovo sobre one-sided spectral density
         self.f = f
+        self.df = f[1] - f[0]
 
     def moment0(self):
-        df = 1
 
-        soma0 = 0
+        m0 = 0
 
         # Por Dirlik, mi = (1/2pi) integral (w^i)*G(w)dw de -inf até inf
 
-        for i in range(1, len(self.f) - 1):
+        for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                soma0 += self.Y[i]
+                m0 += self.Y[i]*self.df
 
-        m0 = (self.Y[0] + 2 * soma0 + self.Y[len(self.f) - 1]) * df / 2
         return m0
 
-    def moment1(self):
-        soma1 = 0
-        df = 1
+    def moment0dot75(self):
+        m75 = 0
 
-        for i in range(1, len(self.f) - 1):
+        for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                soma1 += np.abs(self.Y[i] * self.f[i])
+                m75 += np.abs(self.Y[i] * self.f[i]**0.75)*self.df
 
-        m1 = (self.Y[0] * self.f[0] + 2 * soma1 + self.Y[len(self.f) - 1] * self.f[len(self.f) - 1]) * df / 2
+        return m75
+
+    def moment1(self):
+        m1 = 0
+
+        for i in range(0, len(self.f)):
+            if self.f[i] >= 0:
+                m1 += np.abs(self.Y[i] * self.f[i])*self.df
+
         return m1
 
-    def moment2(self):
-        soma2 = 0
-        df = 1
+    def moment1dot5(self):
+        m15 = 0
 
-        for i in range(1, len(self.f) - 1):
+        for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                soma2 += np.abs(self.Y[i] * self.f[i] ** 2)
+                m15 += np.abs(self.Y[i] * self.f[i]**1.5)*self.df
 
-        m2 = (self.Y[0] * self.f[0] ** 2 + 2 * soma2 + self.Y[len(self.f) - 1] * self.f[len(self.f) - 1] ** 2) * df / 2
-        # Sem dividir por 2 o resultado fica mais aceitável
+        return m15
+
+    def moment2(self):
+        m2 = 0
+
+
+        for i in range(0, len(self.f)):
+            if self.f[i] >= 0:
+                m2 += np.abs(self.Y[i] * self.f[i] ** 2)*self.df
+
         return m2
 
     def moment4(self):
-        soma4 = 0
-        df = 1
+        m4 = 0
 
-        for i in range(1, len(self.f) - 1):
+        for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                soma4 += np.abs(self.Y[i] * self.f[i] ** 4)
+                m4 += np.abs(self.Y[i] * self.f[i] ** 4)*self.df
 
-        m4 = (self.Y[0] * self.f[0] ** 4 + 2 * soma4 + self.Y[len(self.f) - 1] * self.f[len(self.f) - 1] ** 4) * df / 2
         return m4
+    
+    def E0(self):
+        return np.sqrt(Probability_Moment(self.Y, self.f).moment2()/Probability_Moment(self.Y, self.f).moment0())
+    
+    def EP(self):
+        return np.sqrt(Probability_Moment(self.Y, self.f).moment4()/Probability_Moment(self.Y, self.f).moment2())
+    
+    def alpha2(self):
+        return Probability_Moment(self.Y, self.f).E0()/Probability_Moment(self.Y, self.f).EP()
 
