@@ -13,7 +13,7 @@ This package can estimate fatigue life by 4 methods:
 First, it is necessary to do the calculations of the probability moments.
 So, you need Power Spectral Density. To test this package, sum of sinusoid will be used to get PSD, as seen below
 
-```
+```python
 import numpy as np
 from scipy import signal
 
@@ -35,7 +35,7 @@ f, Gyy = signal.welch(y, fs, return_onesided=True, window=window, average='media
 
 So, just use the module present in the fatiguepy package. Function moment0 to moment4 returns respective probability moment, E0 returns the expected positive zero-crossing rate, EP returns the expected peak occurrency frequency and alpha2 returns spectral width parameter.
 
-```
+```python
 from fatiguepy import *
 moments = prob_moment.Probability_Moment(Gyy, f)
 
@@ -53,7 +53,7 @@ gammanum = moments.alpha2()
 
 Steel SAE 1015 was considered, so Python can perform the calculations.
 
-```
+```python
 b = -0.138
 sigmaf = 1020
 A = (2**b)*sigmaf
@@ -67,7 +67,7 @@ For narrow band processes it is reasonable to assume that every peak coincides w
 
 PDPeaks returns the Probability Density Function of Narrow-Band Method.
 
-```
+```python
 si = 0.0
 sf = abs(max(y)-min(y))
 ds = sf/128
@@ -92,7 +92,7 @@ Damage returns the Damage by NB approach, Life returns the period (in cycles) an
 
 To this method, Wirsching and Light considered an width parameter to correct Narrow-Band approximation with an empirical factor. It can be done with the fatiguepy package as follows:
 
-```
+```python
 WL = Wirsching_Light.WL(k, C, Gyy, f, xf, s)
 DWL = WL.Damage()
 TWL = WL.Life()
@@ -105,7 +105,7 @@ This method has long been considered to be one of the best and has already been 
 
 The functions for this method are analogous to the NB functions:
 
-```
+```python
 DK = Dirlik.DK(k, C, Gyy, f, xf, s)
 
 ps = DK.PDF()
@@ -124,7 +124,7 @@ This method combined theoretical assumptions and simulation results to give the 
 
 The results can be obtained in the same way as the previous methods:
 
-```
+```python
 ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, 1)
 psZB = ZB.PDF()
 
