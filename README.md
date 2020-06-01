@@ -93,6 +93,11 @@ Damage returns the Damage by NB approach, Life returns the period (in cycles) an
 To this method, Wirsching and Light considered an width parameter to correct Narrow-Band approximation with an empirical factor. It can be done with the fatiguepy package as follows:
 
 ```python
+si = 0.0
+sf = abs(max(y)-min(y))
+ds = sf/128
+s = np.arange(si, sf, ds)
+
 WL = Wirsching_Light.WL(k, C, Gyy, f, xf, s)
 DWL = WL.Damage()
 TWL = WL.Life()
@@ -106,6 +111,11 @@ The ordinary range behaves in small ranges like an exponential decrease close to
 This method works as seen below:
 
 ```python
+si = 0.0
+sf = abs(max(y)-min(y))
+ds = sf/128
+s = np.arange(si, sf, ds)
+
 DK = Dirlik.DK(k, C, Gyy, f, xf, s)
 
 psOR = DK.PDFOR()
@@ -122,6 +132,11 @@ This method has long been considered to be one of the best and has already been 
 The functions for this method are analogous to the NB functions:
 
 ```python
+si = 0.0
+sf = abs(max(y)-min(y))
+ds = sf/128
+s = np.arange(si, sf, ds)
+
 DK = Dirlik.DK(k, C, Gyy, f, xf, s)
 
 ps = DK.PDF()
@@ -138,6 +153,11 @@ This method combined theoretical assumptions and simulation results to give the 
 The results can be obtained in the same way as the previous methods:
 
 ```python
+si = 0.0
+sf = abs(max(y)-min(y))
+ds = sf/128
+s = np.arange(si, sf, ds)
+
 ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, 1)
 psZB = ZB.PDF()
 
@@ -149,6 +169,8 @@ TZBh = ZB.Lifeh()
 ## Relative Error
 
 To compute relative error of any method, the relative_error function, present in all modules of the fatiguepy package, must be used, with the exception of the Dirlik module, which has a difference between the Rainflow Range and Ordinary Range methods. In these cases, you must use the relative_errorRR() method, for Rainflow Range, and relative_errorOR(), for Ordinary Range. 
+
+This relative error is in relation to Damage/(unit of second).
 
 Here's an example, calculating error for Zhao-Baker Method:
 
@@ -162,7 +184,7 @@ err = ZB.relative_error(y)
 
 When the method parameter is hidden, method="Rainflow" is considered.
 
-If you want to calculate error in relation to the experimental result, do as follows:
+If you want to calculate error in relation to the experimental result, do as follows (Dexperimental has to be in Damage/(unit of time)):
 ```python
 ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, 1)
 psZB = ZB.PDF()
