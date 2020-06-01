@@ -132,7 +132,7 @@ TZBh = ZB.Lifeh()
 
 ## Relative Error
 
-To compute relative error of any method, the relative_error function, present in all modules of the fatiguepy package, must be used, with the exception of the Dirlik module, which has a difference between the Rainflow Range and Ordinary Range methods. In these cases, you must use the relative_errorRR () method, for Rainflow Range, and relative_errorOR (), for Ordinary Range. 
+To compute relative error of any method, the relative_error function, present in all modules of the fatiguepy package, must be used, with the exception of the Dirlik module, which has a difference between the Rainflow Range and Ordinary Range methods. In these cases, you must use the relative_errorRR() method, for Rainflow Range, and relative_errorOR(), for Ordinary Range. 
 
 Here's an example, calculating error for Zhao-Baker Method:
 
