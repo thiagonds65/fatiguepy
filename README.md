@@ -111,14 +111,11 @@ The ordinary range behaves in small ranges like an exponential decrease close to
 This method works as seen below:
 
 ```python
-<<<<<<< HEAD
 si = 0.0
 sf = abs(max(y)-min(y))
 ds = sf/128
 s = np.arange(si, sf, ds)
 
-=======
->>>>>>> 3d9fee81345fa518aecc0b25274868e1a1561ede
 DK = Dirlik.DK(k, C, Gyy, f, xf, s)
 
 psOR = DK.PDFOR()
