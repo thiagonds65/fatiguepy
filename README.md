@@ -99,7 +99,23 @@ TWL = WL.Life()
 TWLh = WL.Lifeh()
 ```
 
-## Dirlik *Rainflow Ranges Half Cycle* (DK)
+## Dirlik *Ordinary Range Half Cycle* (DK)
+
+The ordinary range behaves in small ranges like an exponential decrease close to origin. The later part of the densities features a Rayleigh Function.
+
+This method works as seen below:
+
+```python
+DK = Dirlik.DK(k, C, Gyy, f, xf, s)
+
+psOR = DK.PDFOR()
+
+DOR = DK.DamageOR()
+TOR = DK.LifeOR()
+TORh = DK.LifehOR()
+```
+
+## Dirlik *Rainflow Range Half Cycle* (DK)
 
 This method has long been considered to be one of the best and has already been subject to modifications, e.g., for the inclusion of the temperature effect.
 
