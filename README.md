@@ -69,7 +69,7 @@ The damage (Damage/unit of time) calculated by every method is given by Palmgren
 <img src="https://render.githubusercontent.com/render/math?math=\overline{D} = \nu_pC^{-1}\int_0^\infty s^k p_a(s) ds">
 </p>
 
-Where $p_a$ is PDF of amplitude, k and C is material property, $\nu_p$ is equivalent to expected number of peaks and s is stress.
+Where <img src="https://render.githubusercontent.com/render/math?math=p_a"> is PDF of amplitude, k and C is material property, <img src="https://render.githubusercontent.com/render/math?math=\nu_p"> is equivalent to expected number of peaks and s is stress.
 
 ## Narrow Band (NB)
 
