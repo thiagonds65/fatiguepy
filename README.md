@@ -61,6 +61,16 @@ k = -1/b
 C = A ** k
 ```
 
+## Damage
+
+The damage (Damage/unit of time) calculated by every method is given by Palmgren-Miner Rule applied to Probability Density Function or given by the following equation:
+
+<p align=center>
+<img src="https://render.githubusercontent.com/render/math?math=\overline{D} = \nu_pC^{-1}\int_0^\infty s^k p_a(s) ds">
+</p>
+
+Where $p_a$ is PDF of amplitude, k and C is material property, $\nu_p$ is equivalent to expected number of peaks and s is stress.
+
 ## Narrow Band (NB)
 
 For narrow band processes it is reasonable to assume that every peak coincides with a cycle and that, consequently, the amplitudes of the cycles are distributed according to a Rayleigh function.
@@ -81,11 +91,6 @@ TNB = NB.Life()
 TNBh = NB.Lifeh()
 ```
 
-The damage calculated by Narrow Band method is given by Palmgren-Miner Rule applied to Probability Density Function or given by the following equation:
-
-<p align=center>
-<img src="https://render.githubusercontent.com/render/math?math=\overline{D}_{NB} = \nu_0C^{-1}\left(\sqrt{2m_0}\right)^k\Gamma\left(1 %2B \frac{k}{2}\right)">
-</p>
 Damage returns the Damage by NB approach, Life returns the period (in cycles) and Lifeh returns the life in hours.
 
 ## Wirsching-Light (WL)
@@ -104,7 +109,7 @@ TWL = WL.Life()
 TWLh = WL.Lifeh()
 ```
 
-## Dirlik *Ordinary Range Half Cycle* (DK)
+## Dirlik *Ordinary Range Half Cycle* (OR)
 
 The ordinary range behaves in small ranges like an exponential decrease close to origin. The later part of the densities features a Rayleigh Function.
 
@@ -125,7 +130,7 @@ TOR = DK.LifeOR()
 TORh = DK.LifehOR()
 ```
 
-## Dirlik *Rainflow Range Half Cycle* (DK)
+## Dirlik *Rainflow Range Half Cycle* (RR)
 
 This method has long been considered to be one of the best and has already been subject to modifications, e.g., for the inclusion of the temperature effect.
 
