@@ -1,6 +1,6 @@
 import numpy as np
 import math
-from fatiguepy import prob_moment
+from . import prob_moment, Rainflow
 
 class ZB:
     def __new__(cls, *args, **kwargs):
@@ -87,3 +87,18 @@ class ZB:
     def Life(self):
         TZB = self.Lifes()/self.xf
         return TZB
+
+    def relative_error(self, y, method="Rainflow", Dexperimental=None):
+        DZB = self.Damage()
+        if(method == "Rainflow"):
+            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).DRF()
+            err = abs(DZB - DRF)/DRF
+        elif(method == "Experimental" and Dexperimental != None):
+            DEX = Dexperimental
+            err = abs(DZB - DEX)/DEX
+        elif(method == "Experimental" and Dexperimental == None):
+            raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
+        elif(method != "Experimental" and method != "Rainflow"):
+            raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")
+
+        return err

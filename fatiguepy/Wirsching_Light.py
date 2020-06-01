@@ -1,5 +1,5 @@
 import numpy as np
-from fatiguepy import prob_moment, Narrow_Band
+from . import prob_moment, Narrow_Band, Rainflow
 
 class WL:
     def __new__(cls, *args, **kwargs):
@@ -41,3 +41,18 @@ class WL:
     def Life(self):
         TWL = self.Lifes()/self.xf
         return TWL
+    
+    def relative_error(self, y, method="Rainflow", Dexperimental=None):
+        DWL = self.Damage()
+        if(method == "Rainflow"):
+            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).DRF()
+            err = abs(DWL - DRF)/DRF
+        elif(method == "Experimental" and Dexperimental != None):
+            DEX = Dexperimental
+            err = abs(DWL - DEX)/DEX
+        elif(method == "Experimental" and Dexperimental == None):
+            raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
+        elif(method != "Experimental" and method != "Rainflow"):
+            raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")
+
+        return err

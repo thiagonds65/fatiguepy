@@ -1,12 +1,17 @@
 import numpy as np
 import math
-from . import prob_moment
+from . import prob_moment, Rainflow
+
 class DK:
     def __new__(cls, *args, **kwargs):
         instance = super(DK, cls).__new__(cls)
         return instance
 
     def __init__(self, k, C, Y, f, xf, s):
+        """
+        The Acronym RR at the end of each method is equivalent to Rainflow Range Half Cycles
+        and OR is equivalent to Ordinary Range Half Cycles
+        """
         self.Y = Y
         self.f = f
         moments = prob_moment.Probability_Moment(self.Y, self.f)
@@ -22,7 +27,7 @@ class DK:
         self.s = s
     
     def PDFOR(self):
-        z = self.s / (2*np.sqrt(self.m0))
+        z = self.s / (np.sqrt(self.m0))
         Xm = (self.m1 / self.m0) * np.sqrt(self.m2 / self.m4)
         Xmin = (self.alpha2*(1+self.alpha2**2))/2
         G1 = (1/self.alpha2**2)*(Xm - Xmin)
@@ -33,7 +38,8 @@ class DK:
         
         return psor
 
-    def PDF(self):
+    def PDFRR(self):
+        
         z = self.s / (2*np.sqrt(self.m0))
         Xm = (self.m1 / self.m0) * np.sqrt(self.m2 / self.m4)
         G1 = 2 * (Xm - self.alpha2 ** 2) / (1 + self.alpha2 ** 2)
@@ -41,13 +47,17 @@ class DK:
         G2 = (1 - self.alpha2 - G1 + G1 ** 2) / (1 - R)
         G3 = 1 - G1 - G2
         Q = 5 * (self.alpha2 - G3 - G2 * R) / (4 * G1)
-        # # Abaixo contem a equacao do metodo Dirlik pela tese de mestrado de Ariduru
+        # # Dirlik method according to Ariduru:
         p1 = (G1 / Q) * np.exp(-z / Q)
         p2 = (G2 / R ** 2) * np.exp(-z ** 2 / (R ** 2))
         p3 = G3 * z * np.exp(-z ** 2 / 2)
         pnum = p1 + p2 + p3
         pden = 2 * np.sqrt(self.m0)
         ps = pnum / pden
+
+        # Dirlik method according to Matjaz
+        # ps = ((G1/Q)*np.exp(-z/Q) + (G2*z/R**2)*np.exp(-z**2/(R**2))+G3*z*np.exp(-z**2/2))/(np.sqrt(self.m0))
+        
         integ = 0
         ds = self.s[1] - self.s[0]
         for i in range(len(self.s)):
@@ -55,12 +65,11 @@ class DK:
 
         ps = ps/integ
 
-        # Abaixo contem a equacao do metodo Dirlik pelo artigo Matjaz
-        # ps = ((G1/Q)*np.exp(-z/Q) + (G2*z/R**2)*np.exp(-z**2/(R**2))+G3*z*np.exp(-z**2/2))/(np.sqrt(self.m0))
         return ps
 
-    def Damage(self):
-        ps = self.PDF()
+    def DamageRR(self):
+
+        ps = self.PDFRR()
         ds = self.s[1] - self.s[0]
         DDK = 0
         for i in range(1,len(ps)):
@@ -68,14 +77,66 @@ class DK:
 
         return DDK
 
-    def Lifes(self):
-        TDKs = 1 / self.Damage()
+    def LifesRR(self):
+        TDKs = 1 / self.DamageRR()
         return TDKs
 
-    def Lifeh(self):
-        TDKh = self.Lifes()/(3600)
+    def LifehRR(self):
+        TDKh = self.LifesRR()/(3600)
         return TDKh
 
-    def Life(self):
-        TDK = self.Lifes()/self.xf
+    def LifeRR(self):
+        TDK = self.LifesRR()/self.xf
         return TDK
+    
+    def relative_errorRR(self, y, method="Rainflow", Dexperimental=None):
+        DRR = self.DamageRR()
+        if(method == "Rainflow"):
+            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).DRF()
+            err = abs(DRR - DRF)/DRF
+        elif(method == "Experimental" and Dexperimental != None):
+            DEX = Dexperimental
+            err = abs(DRR - DEX)/DEX
+        elif(method == "Experimental" and Dexperimental == None):
+            raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
+        elif(method != "Experimental" and method != "Rainflow"):
+            raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")
+
+        return err
+
+    def DamageOR(self):
+
+        ps = self.PDFOR()
+        ds = self.s[1] - self.s[0]
+        DOR = 0
+        for i in range(1,len(ps)):
+            DOR += (self.EP*(self.C**(-1))*(self.s[i]**self.k)*ps[i]*ds)
+
+        return DOR
+
+    def LifesOR(self):
+        TORs = 1 / self.DamageOR()
+        return TORs
+
+    def LifehOR(self):
+        TORh = self.LifesOR()/(3600)
+        return TORh
+
+    def LifeOR(self):
+        TOR = self.LifesOR()/self.xf
+        return TOR
+    
+    def relative_errorOR(self, y, method="Rainflow", Dexperimental=None):
+        DOR = self.DamageOR()
+        if(method == "Rainflow"):
+            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).DRF()
+            err = abs(DOR - DRF)/DRF
+        elif(method == "Experimental" and Dexperimental != None):
+            DEX = Dexperimental
+            err = abs(DOR - DEX)/DEX
+        elif(method == "Experimental" and Dexperimental == None):
+            raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
+        elif(method != "Experimental" and method != "Rainflow"):
+            raise UnboundLocalError("Invalid Method")
+
+        return err

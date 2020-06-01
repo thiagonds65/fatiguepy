@@ -99,7 +99,7 @@ TWL = WL.Life()
 TWLh = WL.Lifeh()
 ```
 
-## Dirlik (DK)
+## Dirlik *Rainflow Ranges Half Cycle* (DK)
 
 This method has long been considered to be one of the best and has already been subject to modifications, e.g., for the inclusion of the temperature effect.
 
@@ -109,9 +109,6 @@ The functions for this method are analogous to the NB functions:
 DK = Dirlik.DK(k, C, Gyy, f, xf, s)
 
 ps = DK.PDF()
-
-psor = DK.PDFOR()
-
 
 DDK = DK.Damage()
 TDK = DK.Life()
@@ -131,4 +128,30 @@ psZB = ZB.PDF()
 DZB = ZB.Damage()
 TZB = ZB.Life()
 TZBh = ZB.Lifeh()
+```
+
+## Relative Error
+
+To compute relative error of any method, the relative_error function, present in all modules of the fatiguepy package, must be used, with the exception of the Dirlik module, which has a difference between the Rainflow Range and Ordinary Range methods. In these cases, you must use the relative_errorRR () method, for Rainflow Range, and relative_errorOR (), for Ordinary Range. 
+
+Here's an example, calculating error for Zhao-Baker Method:
+
+```python
+ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, 1)
+psZB = ZB.PDF()
+
+DZB = ZB.Damage()
+err = ZB.relative_error(y)
+```
+
+When the method parameter is hidden, method="Rainflow" is considered.
+
+If you want to calculate error in relation to the experimental result, do as follows:
+```python
+ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, 1)
+psZB = ZB.PDF()
+
+DZB = ZB.Damage()
+Dex = 0.61
+err = ZB.relative_error(y, method="Experimental", Dexperimental = Dex)
 ```
