@@ -1,7 +1,6 @@
 import math
 import numpy as np
 from . import prob_moment, Rainflow
-from scipy.stats import norm
 
 class NB:
     def __new__(cls, *args, **kwargs):
@@ -93,7 +92,7 @@ class NB:
     def relative_error(self, y, method="Rainflow", Dexperimental=None):
         DNB = self.Damage()
         if(method == "Rainflow"):
-            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).DRF()
+            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
             err = abs(DNB - DRF)/DRF
         elif(method == "Experimental" and Dexperimental != None):
             DEX = Dexperimental

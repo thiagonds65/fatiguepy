@@ -11,7 +11,7 @@ class rainflowD:
         self.b = b
         self.y = y
         self.xf = xf
-    def DRF(self):
+    def Damage(self):
         cc = rainflow.count_cycles(self.y)
 
         vl = []

@@ -8,6 +8,16 @@ This package can estimate fatigue life by 4 methods:
 * Dirlik
 * Zhao-Baker
 
+The package requires numpy, math and rainflow
+
+## Instalation
+
+Install directly the package by pip:
+
+```
+pip install fatiguepy
+```
+
 ## Probability Moments
 
 First, it is necessary to do the calculations of the probability moments.

@@ -45,7 +45,7 @@ class WL:
     def relative_error(self, y, method="Rainflow", Dexperimental=None):
         DWL = self.Damage()
         if(method == "Rainflow"):
-            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).DRF()
+            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
             err = abs(DWL - DRF)/DRF
         elif(method == "Experimental" and Dexperimental != None):
             DEX = Dexperimental

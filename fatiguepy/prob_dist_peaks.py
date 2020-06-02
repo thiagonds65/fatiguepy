@@ -1,6 +1,5 @@
 import numpy as np
 import math
-from scipy.stats import norm
 class prob_dist:
     def __new__(cls, *args, **kwargs):
         instance = super(prob_dist, cls).__new__(cls)

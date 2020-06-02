@@ -1,5 +1,4 @@
 import numpy as np
-import math
 from . import prob_moment, Rainflow
 
 class DK:
@@ -92,7 +91,7 @@ class DK:
     def relative_errorRR(self, y, method="Rainflow", Dexperimental=None):
         DRR = self.DamageRR()
         if(method == "Rainflow"):
-            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).DRF()
+            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
             err = abs(DRR - DRF)/DRF
         elif(method == "Experimental" and Dexperimental != None):
             DEX = Dexperimental
