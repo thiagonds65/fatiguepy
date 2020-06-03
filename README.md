@@ -50,10 +50,10 @@ Once the PSD and frequency are obtained, just use the module present in the fati
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
 array of sample frequencies
 
 
@@ -101,19 +101,19 @@ PDPeaks returns the Probability Density Function of Narrow-Band Method.
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
 Array of sample stresses
 
 
@@ -139,19 +139,19 @@ To this method, Wirsching and Light considered an width parameter to correct Nar
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
 Array of sample stresses
 
 
@@ -173,19 +173,19 @@ The ordinary range behaves in small ranges like an exponential decrease close to
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
 Array of sample stresses
 
 
@@ -212,19 +212,19 @@ This method has long been considered to be one of the best and has already been 
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
 Array of sample stresses
 
 
@@ -251,19 +251,19 @@ This method combined theoretical assumptions and simulation results to give the 
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
 Array of sample stresses
 
 
