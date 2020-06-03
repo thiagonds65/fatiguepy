@@ -18,7 +18,7 @@ Install directly the package by pip:
 pip install fatiguepy
 ```
 
-## Probability Moments
+## Obtaining Power Spectral  Density
 
 First, it is necessary to do the calculations of the probability moments.
 So, you need Power Spectral Density. To test this package, sum of sinusoid will be used to get PSD, as seen below
@@ -43,7 +43,19 @@ window = signal.hann(len(y), False)
 f, Gyy = signal.welch(y, fs, return_onesided=True, window=window, average='median')
 ```
 
-So, just use the module present in the fatiguepy package. Function moment0 to moment4 returns respective probability moment, E0 returns the expected positive zero-crossing rate, EP returns the expected peak occurrency frequency and alpha2 returns spectral width parameter.
+## Probability Moments
+
+Once the PSD and frequency are obtained, just use the module present in the fatiguepy package. Function moment0 to moment4 returns respective probability moment, E0 returns the expected positive zero-crossing rate, EP returns the expected peak occurrency frequency and alpha2 returns spectral width parameter.
+
+
+### Parameters
+
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+Power Spectral Density or Power Spectrum of Stress History y
+
+<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+array of sample frequencies
+
 
 ```python
 from fatiguepy import *
@@ -87,6 +99,24 @@ For narrow band processes it is reasonable to assume that every peak coincides w
 
 PDPeaks returns the Probability Density Function of Narrow-Band Method.
 
+### Parameters
+
+<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+Slope of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+Constant of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+Power Spectral Density or Power Spectrum of Stress History y
+
+<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+Array of sample frequencies
+
+<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+Array of sample stresses
+
+
 ```python
 si = 0.0
 sf = abs(max(y)-min(y))
@@ -107,6 +137,24 @@ Damage returns the Damage by NB approach, Life returns the period (in cycles) an
 
 To this method, Wirsching and Light considered an width parameter to correct Narrow-Band approximation with an empirical factor. It can be done with the fatiguepy package as follows:
 
+### Parameters
+
+<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+Slope of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+Constant of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+Power Spectral Density or Power Spectrum of Stress History y
+
+<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+Array of sample frequencies
+
+<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+Array of sample stresses
+
+
 ```python
 si = 0.0
 sf = abs(max(y)-min(y))
@@ -122,6 +170,24 @@ TWLh = WL.Lifeh()
 ## Dirlik *Ordinary Range Half Cycle* (OR)
 
 The ordinary range behaves in small ranges like an exponential decrease close to origin. The later part of the densities features a Rayleigh Function.
+
+### Parameters
+
+<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+Slope of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+Constant of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+Power Spectral Density or Power Spectrum of Stress History y
+
+<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+Array of sample frequencies
+
+<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+Array of sample stresses
+
 
 This method works as seen below:
 
@@ -144,6 +210,24 @@ TORh = DK.LifehOR()
 
 This method has long been considered to be one of the best and has already been subject to modifications, e.g., for the inclusion of the temperature effect.
 
+### Parameters
+
+<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+Slope of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+Constant of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+Power Spectral Density or Power Spectrum of Stress History y
+
+<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+Array of sample frequencies
+
+<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+Array of sample stresses
+
+
 The functions for this method are analogous to the NB functions:
 
 ```python
@@ -165,6 +249,24 @@ TDKh = DK.Lifeh()
 
 This method combined theoretical assumptions and simulation results to give the linear combination of Weibull and Rayleigh Probability Density Function.
 
+### Parameters
+
+<img src="https://render.githubusercontent.com/render/math?math=k">: *float*
+Slope of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=C">: *float*
+Constant of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}">: *ndarray*
+Power Spectral Density or Power Spectrum of Stress History y
+
+<img src="https://render.githubusercontent.com/render/math?math=f">: *ndarray*
+Array of sample frequencies
+
+<img src="https://render.githubusercontent.com/render/math?math=s">: *ndarray*
+Array of sample stresses
+
+
 The results can be obtained in the same way as the previous methods:
 
 ```python
@@ -173,7 +275,7 @@ sf = abs(max(y)-min(y))
 ds = sf/128
 s = np.arange(si, sf, ds)
 
-ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, 1)
+ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s)
 psZB = ZB.PDF()
 
 DZB = ZB.Damage()
@@ -190,7 +292,7 @@ This relative error is in relation to Damage/(unit of second).
 Here's an example, calculating error for Zhao-Baker Method:
 
 ```python
-ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, 1)
+ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s)
 psZB = ZB.PDF()
 
 DZB = ZB.Damage()
@@ -201,7 +303,7 @@ When the method parameter is hidden, method="Rainflow" is considered.
 
 If you want to calculate error in relation to the experimental result, do as follows (Dexperimental has to be in Damage/(unit of time)):
 ```python
-ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, 1)
+ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s)
 psZB = ZB.PDF()
 
 DZB = ZB.Damage()
