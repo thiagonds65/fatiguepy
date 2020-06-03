@@ -7,7 +7,7 @@ class ZB:
         instance = super(ZB, cls).__new__(cls)
         return instance
 
-    def __init__(self, k, C, Y, f, xf, s, zb):
+    def __init__(self, k, C, Y, f, xf, s):
         self.Y = Y
         self.f = f
         moments = prob_moment.Probability_Moment(self.Y, self.f)
@@ -22,7 +22,6 @@ class ZB:
         self.C = C
         self.EP = moments.EP()
         self.xf = xf
-        self.zb = zb
         self.s = s
 
     def beta(self):
@@ -35,13 +34,13 @@ class ZB:
 
     def PDF(self):
         z = self.s / (2*np.sqrt(self.m0))
-        beta = ZB(self.k, self.C, self.Y, self.f, self.xf, self.s, self.zb).beta()
+        beta = ZB(self.k, self.C, self.Y, self.f, self.xf, self.s).beta()
         EGFbeta = math.gamma(1 + 1/beta)
         EGF3beta = math.gamma(1+3/beta)
 
-        if self.zb==1:
+        if self.k>3:
             alpha = 8 - 7*self.alpha2 #for ZB1
-        elif self.zb==2:
+        elif self.k<=3:
             
             alpha75 = self.m75/(np.sqrt(self.m0*self.m15))
             print(f"alpha75 = {alpha75}")
