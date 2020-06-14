@@ -42,15 +42,22 @@ class WL:
         TWL = self.Lifes()/self.xf
         return TWL
     
-    def relative_error(self, y, method="Rainflow", Dexperimental=None):
-        DWL = self.Damage()
+    def relative_error(self, y, method="Rainflow", experimental_value=None, type='cycles'):
+        if type=="cycles":
+            WL_value = self.Life()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Life()
+        elif type=="damage":
+            WL_value = self.Damage()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
+        elif type!="cycles" and type!="damage":
+            raise UnboundLocalError("Invalid type. Try 'cycles' or 'damage'")
+        
         if(method == "Rainflow"):
-            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
-            err = abs(DWL - DRF)/DRF
-        elif(method == "Experimental" and Dexperimental != None):
-            DEX = Dexperimental
-            err = abs(DWL - DEX)/DEX
-        elif(method == "Experimental" and Dexperimental == None):
+            err = abs(WL_value - RF_value)/RF_value
+        elif(method == "Experimental" and experimental_value != None):
+            EX_value = experimental_value
+            err = abs(WL_value - EX_value)/EX_value
+        elif(method == "Experimental" and experimental_value == None):
             raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
         elif(method != "Experimental" and method != "Rainflow"):
             raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")

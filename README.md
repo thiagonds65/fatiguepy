@@ -5,7 +5,8 @@ This package can estimate fatigue life by 4 methods:
 
 * Narrow Band
 * Wirsching-Light
-* Dirlik
+* <img src="https://render.githubusercontent.com/render/math?math=\alpha_{0.75}">
+* Dirlik (Rainflow Range and Ordinary Range)
 * Zhao-Baker
 
 The package requires numpy, math and rainflow
@@ -18,7 +19,7 @@ Install directly the package by pip:
 pip install fatiguepy
 ```
 
-## Obtaining Power Spectral  Density
+## Obtaining Power Spectral Density
 
 First, it is necessary to do the calculations of the probability moments.
 So, you need Power Spectral Density. To test this package, sum of sinusoid will be used to get PSD, as seen below
@@ -165,6 +166,43 @@ WL = Wirsching_Light.WL(k, C, Gyy, f, xf, s)
 DWL = WL.Damage()
 TWL = WL.Life()
 TWLh = WL.Lifeh()
+```
+
+## <img src="https://render.githubusercontent.com/render/math?math=\alpha_{0.75}"> method (AL)
+
+This method is a correction method based in a spectral parameter <img src="https://render.githubusercontent.com/render/math?math=\alpha_{0.75}">, and it's can be done as follows:
+
+### Parameters
+
+<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+Slope of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+Constant of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+Power Spectral Density or Power Spectrum of Stress History y
+
+<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+Array of sample frequencies
+
+<img src="https://render.githubusercontent.com/render/math?math=xf"> (*float*):
+Observation period
+
+<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+Array of sample stresses
+
+
+```python
+si = 0.0
+sf = abs(max(y)-min(y))
+ds = sf/128
+s = np.arange(si, sf, ds)
+
+AL = Wirsching_Light.AL(k, C, Gyy, f, xf, s)
+DAL = AL.Damage()
+TAL = AL.Life()
+TALh = AL.Lifeh()
 ```
 
 ## Dirlik *Ordinary Range Half Cycle* (OR)

@@ -1,6 +1,7 @@
 import math
 import numpy as np
 from . import prob_moment, Rainflow
+from scipy.stats import norm
 
 class NB:
     def __new__(cls, *args, **kwargs):
@@ -14,10 +15,13 @@ class NB:
         self.Y = Y
         self.f = f
         self.s = s
-        self.m0 = prob_moment.Probability_Moment(self.Y, self.f).moment0()
-        self.E0 = prob_moment.Probability_Moment(self.Y, self.f).E0()
-        self.alpha2 = prob_moment.Probability_Moment(self.Y, self.f).alpha2()
-        self.EP = prob_moment.Probability_Moment(self.Y, self.f).EP()
+        moments = prob_moment.Probability_Moment(self.Y, self.f)
+        self.m0 = moments.moment0()
+        self.m1 = moments.moment1()
+        self.m2 = moments.moment2()
+        self.E0 = moments.E0()
+        self.alpha2 = moments.alpha2()
+        self.EP = moments.EP()
 
     def PDPeaks(self):
         """
@@ -27,10 +31,12 @@ class NB:
         ----------
 
         """
+        z = self.s/np.sqrt(self.m0)
         ratio = (np.sqrt(1-self.alpha2**2)/np.sqrt(2*np.pi*self.m0))
-        exp = np.exp(-(self.s**2)/(2*self.m0*(1-self.alpha2**2)))
+        exp = np.exp(-(z**2)/(2*(1-self.alpha2**2)))
+        
         ratio2 = (self.alpha2*self.s/self.m0)
-        exp2 = np.exp(-(self.s**2)/(2*self.m0))
+        exp2 = np.exp(-(z**2)/2)
 
         #Error Function
         '''
@@ -41,15 +47,13 @@ class NB:
         erf(x) = 2*phi(x*sqrt(2))-1
         '''
 
-        x = (self.alpha2*self.s)/np.sqrt(self.m0*(1-self.alpha2**2))
+        x = self.alpha2*z/np.sqrt(1-self.alpha2**2)
         for i in range(len(self.s)):
             phi = (1/2)*(math.erf(x[i]/np.sqrt(2))+1)
         
         z = self.s / (np.sqrt(self.m0))
         # # Abaixo contem a função de distribuição normal pelo artigo de Carpinteri
         pp = ratio*exp + ratio2*exp2*phi
-        # Visto no artigo Dirlik (página 63 do pdf):
-        #pp = (self.s/self.m0)*np.exp(-self.s**2/(2*self.m0))
 
         integ = 0
         ds = self.s[1] - self.s[0]
@@ -74,6 +78,8 @@ class NB:
         DNB = 0
         for i in range(1,len(pp)):
             DNB += self.EP*(self.C**(-1))*(self.s[i]**self.k)*pp[i]*ds
+        
+        #DNB = self.E0*self.C**(-1)*(2*self.m0)**(self.k/2)*math.gamma(1+self.k/2)
 
         return DNB
     
@@ -89,15 +95,22 @@ class NB:
         TNB = self.Lifes()/self.xf
         return TNB
     
-    def relative_error(self, y, method="Rainflow", Dexperimental=None):
-        DNB = self.Damage()
+    def relative_error(self, y, method="Rainflow", experimental_value=None, type='cycles'):
+        if type=="cycles":
+            NB_value = self.Life()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Life()
+        elif type=="damage":
+            NB_value = self.Damage()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
+        elif type!="cycles" and type!="damage":
+            raise UnboundLocalError("Invalid type. Try 'cycles' or 'damage'")
+        
         if(method == "Rainflow"):
-            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
-            err = abs(DNB - DRF)/DRF
-        elif(method == "Experimental" and Dexperimental != None):
-            DEX = Dexperimental
-            err = abs(DNB - DEX)/DEX
-        elif(method == "Experimental" and Dexperimental == None):
+            err = abs(NB_value - RF_value)/RF_value
+        elif(method == "Experimental" and experimental_value != None):
+            EX_value = experimental_value
+            err = abs(NB_value - EX_value)/EX_value
+        elif(method == "Experimental" and experimental_value == None):
             raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
         elif(method != "Experimental" and method != "Rainflow"):
             raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")

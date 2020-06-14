@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from . import prob_moment, Rainflow
 
 class DK:
@@ -24,22 +25,10 @@ class DK:
         self.EP = moments.EP()
         self.xf = xf
         self.s = s
-    
-    def PDFOR(self):
-        z = self.s / (np.sqrt(self.m0))
-        Xm = (self.m1 / self.m0) * np.sqrt(self.m2 / self.m4)
-        Xmin = (self.alpha2*(1+self.alpha2**2))/2
-        G1 = (1/self.alpha2**2)*(Xm - Xmin)
-        Q = 0.02+(2/self.alpha2)*(Xm - Xmin)
-        G2 = 1 - (1/self.alpha2**2)*(Xm - Xmin)
-        R = self.alpha2 + (1/self.alpha2)*(Xm - Xmin)
-        psor = ((G1 / Q) * np.exp(-z / Q) + (G2 * z/ R ** 2) * np.exp(-z ** 2 / (2 * R ** 2)))/ (2 * np.sqrt(self.m0))
-        
-        return psor
 
     def PDFRR(self):
         
-        z = self.s / (2*np.sqrt(self.m0))
+        z = self.s / (np.sqrt(self.m0))
         Xm = (self.m1 / self.m0) * np.sqrt(self.m2 / self.m4)
         G1 = 2 * (Xm - self.alpha2 ** 2) / (1 + self.alpha2 ** 2)
         R = (self.alpha2 - Xm - G1 ** 2) / (1 - self.alpha2 - G1 + G1 ** 2)
@@ -48,19 +37,20 @@ class DK:
         Q = 5 * (self.alpha2 - G3 - G2 * R) / (4 * G1)
         # # Dirlik method according to Ariduru:
         p1 = (G1 / Q) * np.exp(-z / Q)
-        p2 = (G2 / R ** 2) * np.exp(-z ** 2 / (R ** 2))
+        p2 = (G2 * z / R ** 2) * np.exp(-z ** 2 / (R ** 2))
         p3 = G3 * z * np.exp(-z ** 2 / 2)
         pnum = p1 + p2 + p3
-        pden = 2 * np.sqrt(self.m0)
+        pden = np.sqrt(self.m0)
         ps = pnum / pden
 
         # Dirlik method according to Matjaz
-        # ps = ((G1/Q)*np.exp(-z/Q) + (G2*z/R**2)*np.exp(-z**2/(R**2))+G3*z*np.exp(-z**2/2))/(np.sqrt(self.m0))
+        #ps = ((G1/Q)*np.exp(-z/Q) + (G2*z/R**2)*np.exp(-z**2/(R**2))+G3*z*np.exp(-z**2/2))/(np.sqrt(self.m0))
         
         integ = 0
         ds = self.s[1] - self.s[0]
         for i in range(len(self.s)):
             integ += ps[i]*ds
+        
 
         ps = ps/integ
 
@@ -88,20 +78,47 @@ class DK:
         TDK = self.LifesRR()/self.xf
         return TDK
     
-    def relative_errorRR(self, y, method="Rainflow", Dexperimental=None):
-        DRR = self.DamageRR()
+    def relative_errorRR(self, y, method="Rainflow", experimental_value=None, type='cycles'):
+        if type=="cycles":
+            RR_value = self.LifeRR()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Life()
+        elif type=="damage":
+            RR_value = self.DamageRR()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
+        elif type!="cycles" and type!="damage":
+            raise UnboundLocalError("Invalid type. Try 'cycles' or 'damage'")
+        
         if(method == "Rainflow"):
-            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
-            err = abs(DRR - DRF)/DRF
-        elif(method == "Experimental" and Dexperimental != None):
-            DEX = Dexperimental
-            err = abs(DRR - DEX)/DEX
-        elif(method == "Experimental" and Dexperimental == None):
+            err = abs(RR_value - RF_value)/RF_value
+        elif(method == "Experimental" and experimental_value != None):
+            EX_value = experimental_value
+            err = abs(RR_value - EX_value)/EX_value
+        elif(method == "Experimental" and experimental_value == None):
             raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
         elif(method != "Experimental" and method != "Rainflow"):
             raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")
 
         return err
+    
+    def PDFOR(self):
+        z = self.s / (np.sqrt(self.m0))
+        Xm = (self.m1 / self.m0) * np.sqrt(self.m2 / self.m4)
+        Xmin = (self.alpha2*(1+self.alpha2**2))/2
+        G1 = (1/self.alpha2**2)*(Xm - Xmin)
+        Q = 0.02+(2/self.alpha2)*(Xm - Xmin)
+        G2 = 1 - (1/self.alpha2**2)*(Xm - Xmin)
+        R = self.alpha2 + (1/self.alpha2)*(Xm - Xmin)
+        psor = ((G1 / Q) * np.exp(-z / Q) + (G2 * z/ R ** 2) * np.exp(-z ** 2 / (2 * R ** 2)))/ (np.sqrt(self.m0))
+        
+        integ = 0
+        ds = self.s[1] - self.s[0]
+        for i in range(len(self.s)):
+            integ += psor[i]*ds
+        
+
+        psor = psor/integ
+
+        return psor
 
     def DamageOR(self):
 
@@ -125,17 +142,24 @@ class DK:
         TOR = self.LifesOR()/self.xf
         return TOR
     
-    def relative_errorOR(self, y, method="Rainflow", Dexperimental=None):
-        DOR = self.DamageOR()
+    def relative_errorOR(self, y, method="Rainflow", experimental_value=None, type='cycles'):
+        if type=="cycles":
+            OR_value = self.LifeOR()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Life()
+        elif type=="damage":
+            OR_value = self.DamageOR()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
+        elif type!="cycles" and type!="damage":
+            raise UnboundLocalError("Invalid type. Try 'cycles' or 'damage'")
+        
         if(method == "Rainflow"):
-            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).DRF()
-            err = abs(DOR - DRF)/DRF
-        elif(method == "Experimental" and Dexperimental != None):
-            DEX = Dexperimental
-            err = abs(DOR - DEX)/DEX
-        elif(method == "Experimental" and Dexperimental == None):
+            err = abs(OR_value - RF_value)/RF_value
+        elif(method == "Experimental" and experimental_value != None):
+            EX_value = experimental_value
+            err = abs(OR_value - EX_value)/EX_value
+        elif(method == "Experimental" and experimental_value == None):
             raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
         elif(method != "Experimental" and method != "Rainflow"):
-            raise UnboundLocalError("Invalid Method")
+            raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")
 
         return err

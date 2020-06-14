@@ -33,8 +33,8 @@ class ZB:
 
 
     def PDF(self):
-        z = self.s / (2*np.sqrt(self.m0))
-        beta = ZB(self.k, self.C, self.Y, self.f, self.xf, self.s).beta()
+        z = self.s / (np.sqrt(self.m0))
+        beta = self.beta()
         EGFbeta = math.gamma(1 + 1/beta)
         EGF3beta = math.gamma(1+3/beta)
 
@@ -43,26 +43,33 @@ class ZB:
         elif self.k<=3:
             
             alpha75 = self.m75/(np.sqrt(self.m0*self.m15))
-            print(f"alpha75 = {alpha75}")
+
             if alpha75 < 0.5:
                 roZB = 0.28
             else:
-                roZB = -0.4154 + 1.392*self.alpha2
-            d = 0
+                roZB = -0.4154 + 1.392*alpha75
+            d = 10
             for i in range(10):
                 d = d - (EGF3beta*(1-self.alpha2**2)*d**3+3*EGFbeta*(roZB*self.alpha2-1)*d+3*np.sqrt(np.pi/2)*self.alpha2*(1-roZB))\
                     /(3*EGF3beta*(1-self.alpha2**2)*d**2+3*EGFbeta*(roZB*self.alpha2-1))
                 alpha = d**(-beta)
+        
 
         w = (1 - self.alpha2)/(1 - math.sqrt(2/math.pi)*EGFbeta*alpha**(-1/beta))
 
-        ps = (w*alpha*beta*z**(beta - 1)*np.exp(-alpha*z**beta) + (1-w)*z*np.exp((-z**2)/2)/(2*np.sqrt(self.m0))) 
+        ps = (w*alpha*beta*z**(beta - 1)*np.exp(-alpha*z**beta) + (1-w)*z*np.exp((-z**2)/2))/(np.sqrt(self.m0)) 
         
+        '''
         integ = 0
         ds = self.s[1] - self.s[0]
         for i in range(len(self.s)):
             integ += ps[i]*ds
+        
+        print(integ)  
+
+        denom = self.EP*self.xf # First hypothesis
         ps = ps/integ
+        '''
 
         return ps
 
@@ -87,15 +94,22 @@ class ZB:
         TZB = self.Lifes()/self.xf
         return TZB
 
-    def relative_error(self, y, method="Rainflow", Dexperimental=None):
-        DZB = self.Damage()
+    def relative_error(self, y, method="Rainflow", experimental_value=None, type='cycles'):
+        if type=="cycles":
+            ZB_value = self.Life()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Life()
+        elif type=="damage":
+            ZB_value = self.Damage()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
+        elif type!="cycles" and type!="damage":
+            raise UnboundLocalError("Invalid type. Try 'cycles' or 'damage'")
+        
         if(method == "Rainflow"):
-            DRF = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
-            err = abs(DZB - DRF)/DRF
-        elif(method == "Experimental" and Dexperimental != None):
-            DEX = Dexperimental
-            err = abs(DZB - DEX)/DEX
-        elif(method == "Experimental" and Dexperimental == None):
+            err = abs(ZB_value - RF_value)/RF_value
+        elif(method == "Experimental" and experimental_value != None):
+            EX_value = experimental_value
+            err = abs(ZB_value - EX_value)/EX_value
+        elif(method == "Experimental" and experimental_value == None):
             raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
         elif(method != "Experimental" and method != "Rainflow"):
             raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")

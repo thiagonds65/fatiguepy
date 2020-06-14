@@ -6,9 +6,11 @@ class rainflowD:
         instance = super(rainflowD, cls).__new__(cls)
         return instance
 
-    def __init__(self, A, b, y, xf):
-        self.A = A
-        self.b = b
+    def __init__(self, C, k, y, xf):
+        self.C = C
+        self.k = k
+        self.b = -1/k
+        self.A = C**(1/k)
         self.y = y
         self.xf = xf
     def Damage(self):
@@ -53,3 +55,15 @@ class rainflowD:
 
         DRF = DRF/self.xf
         return DRF
+    
+    def Lifes(self):
+        TRFs =  1/self.Damage()
+        return TRFs
+    
+    def Lifeh(self):
+        TRFh = self.Lifes()/3600
+        return TRFh
+    
+    def Life(self):
+        TRF = self.Lifes()/self.xf
+        return TRF

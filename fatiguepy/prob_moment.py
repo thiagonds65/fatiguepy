@@ -70,11 +70,14 @@ class Probability_Moment:
         return m4
     
     def E0(self):
-        return np.sqrt(Probability_Moment(self.Y, self.f).moment2()/Probability_Moment(self.Y, self.f).moment0())
+        return np.sqrt(self.moment2()/self.moment0())
     
     def EP(self):
-        return np.sqrt(Probability_Moment(self.Y, self.f).moment4()/Probability_Moment(self.Y, self.f).moment2())
+        return np.sqrt(self.moment4()/self.moment2())
     
     def alpha2(self):
-        return Probability_Moment(self.Y, self.f).E0()/Probability_Moment(self.Y, self.f).EP()
+        return self.moment2()/np.sqrt(self.moment0()*self.moment4())
+    
+    def alpha0dot75(self):
+        return self.moment0dot75()/np.sqrt(self.moment0()*self.moment1dot5())
 
