@@ -1,7 +1,7 @@
 # Fatiguepy Package
 
 ## Available Methods
-This package can estimate fatigue life by 4 methods:
+This package can estimate fatigue life by 5 methods:
 
 * Narrow Band
 * Wirsching-Light
