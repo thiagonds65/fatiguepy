@@ -236,7 +236,7 @@ sf = abs(max(y)-min(y))
 ds = sf/128
 s = np.arange(si, sf, ds)
 
-AL = Wirsching_Light.AL(k, C, Gyy, f, xf, s)
+AL = alpha075.AL(k, C, Gyy, f, xf, s)
 DAL = AL.Damage()
 TAL = AL.Life()
 TALh = AL.Lifeh()
