@@ -19,7 +19,7 @@ class AL:
 
     def Damage(self):
 
-        DAL = (self.alpha0dot75**2) * self.DNB
+        DAL = (self.alpha075**2) * self.DNB
 
         return DAL
 
