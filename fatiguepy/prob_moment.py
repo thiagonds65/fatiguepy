@@ -23,7 +23,7 @@ class Probability_Moment:
 
         return m0
 
-    def moment0dot75(self):
+    def moment075(self):
         m75 = 0
 
         for i in range(0, len(self.f)):
@@ -41,7 +41,7 @@ class Probability_Moment:
 
         return m1
 
-    def moment1dot5(self):
+    def moment15(self):
         m15 = 0
 
         for i in range(0, len(self.f)):
@@ -81,6 +81,6 @@ class Probability_Moment:
     def alpha2(self):
         return self.moment2()/np.sqrt(self.moment0()*self.moment4())
     
-    def alpha0dot75(self):
+    def alpha075(self):
         return self.moment0dot75()/np.sqrt(self.moment0()*self.moment1dot5())
 
