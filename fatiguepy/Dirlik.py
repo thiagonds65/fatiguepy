@@ -28,7 +28,7 @@ class DK:
 
     def PDFRR(self):
         
-        z = self.s / (np.sqrt(self.m0))
+        z = (self.s) / (np.sqrt(self.m0))
         Xm = (self.m1 / self.m0) * np.sqrt(self.m2 / self.m4)
         G1 = 2 * (Xm - self.alpha2 ** 2) / (1 + self.alpha2 ** 2)
         R = (self.alpha2 - Xm - G1 ** 2) / (1 - self.alpha2 - G1 + G1 ** 2)
@@ -37,7 +37,7 @@ class DK:
         Q = 5 * (self.alpha2 - G3 - G2 * R) / (4 * G1)
         # # Dirlik method according to Ariduru:
         p1 = (G1 / Q) * np.exp(-z / Q)
-        p2 = (G2 * z / R ** 2) * np.exp(-z ** 2 / (R ** 2))
+        p2 = (G2 * z / R ** 2) * np.exp(-z ** 2 / (2 * R ** 2))
         p3 = G3 * z * np.exp(-z ** 2 / 2)
         pnum = p1 + p2 + p3
         pden = np.sqrt(self.m0)

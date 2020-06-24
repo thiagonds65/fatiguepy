@@ -75,6 +75,9 @@ class Probability_Moment:
     def EP(self):
         return np.sqrt(self.moment4()/self.moment2())
     
+    def alpha1(self):
+        return self.moment1()/np.sqrt(self.moment0()*self.moment2())
+
     def alpha2(self):
         return self.moment2()/np.sqrt(self.moment0()*self.moment4())
     

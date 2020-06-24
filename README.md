@@ -5,6 +5,7 @@ This package can estimate fatigue life by 5 methods:
 
 * Narrow Band
 * Wirsching-Light
+* Tovo-Benasciutti
 * <img src="https://render.githubusercontent.com/render/math?math=\alpha_{0.75}">
 * Dirlik (Rainflow Range and Ordinary Range)
 * Zhao-Baker
@@ -166,6 +167,42 @@ WL = Wirsching_Light.WL(k, C, Gyy, f, xf, s)
 DWL = WL.Damage()
 TWL = WL.Life()
 TWLh = WL.Lifeh()
+```
+
+## Tovo-Benasciutti (TB)
+
+To this method, Tovo and Benasciutti proposed an approach where the
+fatigue life is calculated as a linear combination of the upper and lower fatigue-
+damage intensity limits. It can be done with the fatiguepy package as follows:
+
+### Parameters
+
+<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+Slope of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+Constant of SN Curve
+
+<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+Power Spectral Density or Power Spectrum of Stress History y
+
+<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+Array of sample frequencies
+
+<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+Array of sample stresses
+
+
+```python
+si = 0.0
+sf = abs(max(y)-min(y))
+ds = sf/128
+s = np.arange(si, sf, ds)
+
+TB = Tovo_Benasciutti.TB(k, C, Gyy, f, xf, s)
+DTB = TB.Damage()
+TTB = TB.Life()
+TTBh = TB.Lifeh()
 ```
 
 ## <img src="https://render.githubusercontent.com/render/math?math=\alpha_{0.75}"> method (AL)
