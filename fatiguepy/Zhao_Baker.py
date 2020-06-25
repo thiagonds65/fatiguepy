@@ -15,8 +15,8 @@ class ZB:
         self.m1 = moments.moment1()
         self.m2 = moments.moment2()
         self.m4 = moments.moment4()
-        self.m75 = moments.moment0dot75()
-        self.m15 = moments.moment1dot5()
+        self.m75 = moments.moment075()
+        self.m15 = moments.moment15()
         self.alpha2 = moments.alpha2()
         self.k = k
         self.C = C
