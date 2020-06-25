@@ -82,5 +82,5 @@ class Probability_Moment:
         return self.moment2()/np.sqrt(self.moment0()*self.moment4())
     
     def alpha075(self):
-        return self.moment0dot75()/np.sqrt(self.moment0()*self.moment1dot5())
+        return self.moment075()/np.sqrt(self.moment0()*self.moment15())
 
