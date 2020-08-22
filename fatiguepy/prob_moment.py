@@ -11,6 +11,13 @@ class Probability_Moment:
         self.f = f
         self.df = f[1] - f[0]
 
+        '''
+            If calculate m_i through integral of (G_yy(f)*(2*pi*f)^i)df, 
+            the result of sqrt(m_2) is close to sigma_Xdot 
+            and sqrt(m_4) is close to sigma_double dot, but the error is bigger than obtained
+            without this (2*pi)
+        '''
+
     def moment0(self):
 
         m0 = 0
@@ -28,7 +35,7 @@ class Probability_Moment:
 
         for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                m75 += np.abs(self.Y[i] * self.f[i]**0.75)*self.df
+                m75 += np.abs(self.Y[i] * (2*np.pi*self.f[i])**0.75)*self.df
 
         return m75
 
@@ -37,7 +44,7 @@ class Probability_Moment:
 
         for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                m1 += np.abs(self.Y[i] * self.f[i])*self.df
+                m1 += np.abs(self.Y[i] * 2*np.pi*self.f[i])*self.df
 
         return m1
 
@@ -46,7 +53,7 @@ class Probability_Moment:
 
         for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                m15 += np.abs(self.Y[i] * self.f[i]**1.5)*self.df
+                m15 += np.abs(self.Y[i] * (2*np.pi*self.f[i])**1.5)*self.df
 
         return m15
 
@@ -56,7 +63,7 @@ class Probability_Moment:
 
         for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                m2 += np.abs(self.Y[i] * self.f[i] ** 2)*self.df
+                m2 += np.abs(self.Y[i] * (2*np.pi*self.f[i]) ** 2)*self.df
 
         return m2
 
@@ -65,15 +72,15 @@ class Probability_Moment:
 
         for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                m4 += np.abs(self.Y[i] * self.f[i] ** 4)*self.df
+                m4 += np.abs(self.Y[i] * (2*np.pi*self.f[i]) ** 4)*self.df
 
         return m4
     
     def E0(self):
-        return np.sqrt(self.moment2()/self.moment0())
+        return np.sqrt(self.moment2()/self.moment0())/(2*np.pi)
     
     def EP(self):
-        return np.sqrt(self.moment4()/self.moment2())
+        return np.sqrt(self.moment4()/self.moment2())/(2*np.pi)
     
     def alpha1(self):
         return self.moment1()/np.sqrt(self.moment0()*self.moment2())

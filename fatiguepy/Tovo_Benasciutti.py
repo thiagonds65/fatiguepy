@@ -44,21 +44,21 @@ class TB:
         TTB = self.Lifes()/self.xf
         return TTB
     
-    def relative_error(self, y, method="Rainflow", experimental_value=None, type='cycles'):
+    def relative_error(self, y, x, method="Rainflow", experimental_value=None, type='cycles'):
         if type=="cycles":
             TB_value = self.Life()
-            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Life()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, x).Life()
         elif type=="damage":
             TB_value = self.Damage()
-            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, x).Damage()
         elif type!="cycles" and type!="damage":
             raise UnboundLocalError("Invalid type. Try 'cycles' or 'damage'")
         
         if(method == "Rainflow"):
-            err = abs(TB_value - RF_value)/RF_value
+            err = (TB_value - RF_value)/RF_value
         elif(method == "Experimental" and experimental_value != None):
             EX_value = experimental_value
-            err = abs(TB_value - EX_value)/EX_value
+            err = (TB_value - EX_value)/EX_value
         elif(method == "Experimental" and experimental_value == None):
             raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
         elif(method != "Experimental" and method != "Rainflow"):

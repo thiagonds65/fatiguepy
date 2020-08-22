@@ -4,20 +4,24 @@ import numpy as np
 from . import prob_moment
 
 class rainflowD:
-    def __new__(cls, *args, **kwargs):
-        instance = super(rainflowD, cls).__new__(cls)
-        return instance
 
-    def __init__(self, C, k, y, xf):
+
+    def __init__(self, C, k, y, x):
         self.C = C
         self.k = k
         self.b = -1/k
         self.A = C**(1/k)
         self.y = y
-        self.xf = xf
+        self.x = x
 
-    def PDF(self, Y, f):
-        cc = rainflow.count_cycles(self.y)
+    def rainflow_histogram(self):
+        cc = rainflow.count_cycles(self.y, nbins=50)
+
+        r = []
+        n = []
+        for i in range(len(cc)):
+            r.append(cc[i][0]/2)
+            n.append(cc[i][1])
 
         '''
         nn = np.zeros(len(cc))
@@ -32,7 +36,7 @@ class rainflowD:
                 if round(rng[i - 1], 4) == round(rng[j - 1], 4):
                     rngrou[j] = round(rng[i], 4)
                     nnn[j] += nn[i]
-        '''
+        
 
         vl = []
         pk = []
@@ -67,65 +71,69 @@ class rainflowD:
         for i in range(len(sa)):
             s.append(sa[i]/(1-(sm[i]/sigmaf)))
             n.append(cnt[i])
-        
-        
-        for i in range(len(s) - 1):
-            for j in range(len(s) - 1):
-                if s[j] > s[j+1]:
-                    auxs = s[j]
-                    s[j] = s[j+1]
-                    s[j+1] = auxs
+        '''
 
-                    auxn = n[j]
-                    n[j] = n[j+1]
-                    n[j+1] = auxn
-        
-        '''
-        p = []
-        ss = []
-        c = 1
-        for i in range(0, len(s)-1):
-            if round(s[i], 4) == round(s[i+1], 4):
-                c +=1
-                
-                sss = s[i]
-            else:
-                p.append(c/len(s))
-                ss.append(sss)
-                c = 1
-        '''
-        
-        
-        p = np.zeros(len(s))
-        ds = s[1] - s[0]
-        
-        EP = prob_moment.Probability_Moment(Y, f).EP()
+        # Begins here!!!!
+        tns = sum(n)
+
+        rangemax = max(r) - min(r)
+
+        nclass = 50
+
+        rangesm = []
+        auxs = []
+        smean = []
+
+        nmatrix = []
+        S = []
+        sigmaf = self.A/(2**self.b)
+
+        for j in range(nclass):
+            sumn = 0
+            for i in range(len(r)):
+                if(r[i] >= min(r) + (rangemax/nclass)*(j)  and r[i] < min(r) + (rangemax/nclass)*(j+1)):
+                    auxs.append(r[i])
+                    sumn += n[i]
+
+                if (r[i] == max(r) and j == nclass-1):
+                    auxs.append(r[i])
+                    sumn +=n[i]
             
-        for i in range(len(s)):
-            p[i] = n[i]/(ds*EP*self.xf)
-        
-        ds = s[1] - s[0]
-        DRF = 0
-        for i in range(1,len(p)):
-            DRF += (EP*(self.C**(-1))*(s[i]**self.k)*p[i]*ds)
-        
-        
-        print(f"Dano Rainflow PDF: {DRF}")
+            nmatrix.append(sumn)
 
-        '''
-        plt.figure(1)
-        plt.plot(s, p)
+            smean.append((min(r) + (rangemax/nclass)*(j) + min(r) + (rangemax/nclass)*(j+1))/2)
+            rangesm.append(auxs[:])
+            auxs.clear()
 
-        plt.xlabel(r'\Delta{S} [MPa]')
-        plt.ylabel(r'PDF [MPa$^{-1}$]')
+            S.append(smean[j]/(1-(self.y.mean()/sigmaf)))
 
-        plt.grid(True)
-        plt.show()
-        '''
+
+
+        bw = (min(r) + (rangemax/nclass)*(j+1)) - (min(r) + (rangemax/nclass)*(j))
+
+        p = []
+        summ = 0
+
+        for i in range(len(nmatrix)):
+            p.append((nmatrix[i]/tns)/bw)
         
-        return s, p
+        #Finish here!!!!
+
+        return S, nmatrix
+
+    def CumuCycles(self):
+        S, n = self.rainflow_histogram()
+        CumuC = np.zeros(len(S))
+
+        for i in range(len(S)):
+            for j in range(i, len(S)):
+                CumuC[i] += n[j]
+        
+        return CumuC, S
+
 
     def Damage(self):
+        '''
         cc = rainflow.count_cycles(self.y)
 
         vl = []
@@ -158,10 +166,17 @@ class rainflowD:
             DRF += n[i] / Nf[i]
 
 
-        DRF = DRF/self.xf
+            DRF = DRF/max(self.x)
+        '''
+
+        S, n = self.rainflow_histogram()
+        DRF = 0
+        for i in range(1,len(n)):
+            Nf = self.C/(S[i]**self.k)
+            DRF += n[i]/Nf 
         
-        return DRF
-    
+        return DRF/max(self.x)
+
     def Lifes(self):
         TRFs =  1/self.Damage()
         return TRFs
@@ -171,5 +186,5 @@ class rainflowD:
         return TRFh
     
     def Life(self):
-        TRF = self.Lifes()/self.xf
+        TRF = self.Lifes()/max(self.x)
         return TRF

@@ -23,45 +23,40 @@ class NB:
         self.alpha2 = moments.alpha2()
         self.EP = moments.EP()
 
-    def PDPeaks(self):
+    def PDF(self):
         """
         A method to obtain Probability Density Function for Narrow Band Process.
-
-        Parameters
         ----------
-
         """
+
         z = self.s/np.sqrt(self.m0)
-        ratio = (np.sqrt(1-self.alpha2**2)/np.sqrt(2*np.pi*self.m0))
-        exp = np.exp(-(z**2)/(2*(1-self.alpha2**2)))
-        
-        ratio2 = (self.alpha2*self.s/self.m0)
-        exp2 = np.exp(-(z**2)/2)
 
-        #Error Function
-        '''
-        Considering phi the standard normal distribution and erf the error function,
-        the relation between this two functions is given by:
-        phi(x) = (1/2)*(1+erf(x/sqrt(2)))
-        or
-        erf(x) = 2*phi(x*sqrt(2))-1
-        '''
-
-        x = self.alpha2*z/np.sqrt(1-self.alpha2**2)
-        for i in range(len(self.s)):
-            phi = (1/2)*(math.erf(x[i]/np.sqrt(2))+1)
-        
-        z = self.s / (np.sqrt(self.m0))
-        # # Abaixo contem a função de distribuição normal pelo artigo de Carpinteri
-        pp = ratio*exp + ratio2*exp2*phi
+        pRL = z*np.exp((-z**2)/2)/np.sqrt(self.m0)
 
         integ = 0
         ds = self.s[1] - self.s[0]
         for i in range(len(self.s)):
-            integ += pp[i]*ds
-        pp = pp/integ
+            integ += pRL[i]*ds
+        pRL = pRL/integ
         
-        return pp
+        return pRL
+    
+    def counting_cycles(self):
+        pRL = self.PDF()
+        ds = self.s[1] - self.s[0]
+        nRL = pRL*ds*self.EP*self.xf
+
+        return nRL
+    
+    def loading_spectrum(self):
+        CRL = np.zeros(len(self.s))
+        nRL = self.counting_cycles()
+
+        for i in range(len(self.s)):
+            for j in range(i, len(self.s)):
+                CRL[i] += nRL[j]
+        
+        return CRL
 
     def Damage(self):
         '''
@@ -73,7 +68,8 @@ class NB:
         Mas também pode ser expresso através de uma equação empírica dependente da PDF, 
         como visto abaixo:
         '''
-        pp = self.PDPeaks()
+        
+        pp = self.PDF()
         ds = self.s[1] - self.s[0]
         DNB = 0
         for i in range(1,len(pp)):
@@ -95,21 +91,21 @@ class NB:
         TNB = self.Lifes()/self.xf
         return TNB
     
-    def relative_error(self, y, method="Rainflow", experimental_value=None, type='cycles'):
+    def relative_error(self, y, x, method="Rainflow", experimental_value=None, type='cycles'):
         if type=="cycles":
             NB_value = self.Life()
-            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Life()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, x).Life()
         elif type=="damage":
             NB_value = self.Damage()
-            RF_value = Rainflow.rainflowD(self.C, self.k, y, self.xf).Damage()
+            RF_value = Rainflow.rainflowD(self.C, self.k, y, x).Damage()
         elif type!="cycles" and type!="damage":
             raise UnboundLocalError("Invalid type. Try 'cycles' or 'damage'")
         
         if(method == "Rainflow"):
-            err = abs(NB_value - RF_value)/RF_value
+            err = (NB_value - RF_value)/RF_value
         elif(method == "Experimental" and experimental_value != None):
             EX_value = experimental_value
-            err = abs(NB_value - EX_value)/EX_value
+            err = (NB_value - EX_value)/EX_value
         elif(method == "Experimental" and experimental_value == None):
             raise UnboundLocalError("Dexperimental must be different from None for method 'Experimental'")
         elif(method != "Experimental" and method != "Rainflow"):
