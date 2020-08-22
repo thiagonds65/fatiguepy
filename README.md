@@ -145,8 +145,6 @@ s = np.arange(si, sf, ds)
 
 NB = Narrow_Band.NB(k, C, Gyy, f, xf, s)
 pNB = NB.PDF()
-nNB = NB.counting_cycles()
-CNB = NB.loading_spectrum()
 
 DNB = NB.Damage()
 TNB = NB.Life()
@@ -195,7 +193,6 @@ s = np.arange(si, sf, ds)
 
 RC = Narrow_Band.RC(k, C, Gyy, f, xf, s)
 pRC = RC.PDF()
-nRC = RC.counting_cycles()
 
 DRC = RC.Damage()
 TRC = RC.Life()
