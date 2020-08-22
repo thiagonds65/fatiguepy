@@ -39,11 +39,11 @@ dt = 1/fs
 x = np.arange(0, xf, dt)
 
 signal1 = []
-    for i in range(len(self.x)):
-        signal1.append(random.random()*amp)
-    signal1 = signal1 - np.mean(signal1)
+for i in range(len(x)):
+    signal1.append(random.random()*300)
+signal1 = signal1 - np.mean(signal1)
 
-nyquist = ((len(self.x)/max(self.x))/2)
+nyquist = ((len(x)/max(x))/2)
 
 left_pass  = 1.1*100/nyquist
 left_stop  = 0.9*100/nyquist
@@ -51,8 +51,8 @@ right_pass = 0.9*150/nyquist
 right_stop = 1.1*150/nyquist
 
 (N, Wn) = signal.buttord(wp=[left_pass, right_pass],
-                    ws=[left_stop, right_stop],
-                    gpass=2, gstop=30, analog=0)
+            ws=[left_stop, right_stop],
+            gpass=2, gstop=30, analog=0)
 
 (b, a) = signal.butter(N, Wn, btype='band', analog=0, output='ba')
 
