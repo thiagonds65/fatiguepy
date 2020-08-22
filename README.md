@@ -539,3 +539,5 @@ DZB = ZB.Damage()
 Dex = 7.00e-09
 err = ZB.relative_error(y, method="Experimental", experimental_value = Dex)
 ```
+
+Access https://github.com/thiagonds65/fatiguepy to view comparison images
