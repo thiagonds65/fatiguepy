@@ -520,11 +520,11 @@ This relative error is in relation to Damage/(unit of second) when type='damage'
 Here's an example, calculating error for Zhao-Baker Method:
 
 ```python
-ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s, type='cycles')
+ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s)
 psZB = ZB.PDF()
 
 DZB = ZB.Damage()
-err = ZB.relative_error(y)
+err = ZB.relative_error(y, type='cycles')
 ```
 
 When the method parameter is hidden, method="Rainflow" is considered.
