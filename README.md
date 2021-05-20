@@ -38,17 +38,14 @@ dt = 1/fs
 
 x = np.arange(0, xf, dt)
 
-signal1 = []
-for i in range(len(x)):
-    signal1.append(random.random()*300)
-signal1 = signal1 - np.mean(signal1)
+signal1 = np.random.randn(len(x))
 
 nyquist = ((len(x)/max(x))/2)
 
-left_pass  = 1.1*100/nyquist
-left_stop  = 0.9*100/nyquist
-right_pass = 0.9*150/nyquist
-right_stop = 1.1*150/nyquist
+left_pass  = 1.1*50/nyquist
+left_stop  = 0.9*50/nyquist
+right_pass = 0.9*120/nyquist
+right_stop = 1.1*120/nyquist
 
 (N, Wn) = signal.buttord(wp=[left_pass, right_pass],
             ws=[left_stop, right_stop],
@@ -148,7 +145,7 @@ pNB = NB.PDF()
 
 DNB = NB.Damage()
 TNB = NB.Life()
-TNBh = NB.Lifeh()
+TNBs = NB.Lifes()
 ```
 
 Damage returns the Damage by NB approach, Life returns the period until failure (in cycles) and Lifeh returns the life in hours.
@@ -156,9 +153,9 @@ Damage returns the Damage by NB approach, Life returns the period until failure 
 For the history in study, this method return the respective results:
 
 ```
-DNB = 7.35e-09 per second
-TNB = 1.35e+07 cycles
-TNBh = 37772.67 hours
+DNB = 0.001030912564660966 per second
+TNB = 9.70014368123321 cycles
+TNBs = 970.014368123321 seconds
 ```
 
 ## Rice (RC)
@@ -196,15 +193,15 @@ pRC = RC.PDF()
 
 DRC = RC.Damage()
 TRC = RC.Life()
-TRCh = RC.Lifeh()
+TRCs = RC.Lifes()
 ```
 
 For the history in study, this method return the respective results:
 
 ```
-DNB = 7.09e-09 per second
-TNB = 1.41e+07 cycles
-TNBh = 39201.35 hours
+DRC = 0.000970230261843453 per second
+TRC = 10.306831680347546 cycles
+TRCs = 1030.6831680347545 seconds
 ```
 
 ## Wirsching-Light (WL)
@@ -238,13 +235,13 @@ s = np.arange(si, sf, ds)
 WL = Wirsching_Light.WL(k, C, Gyy, f, xf, s)
 DWL = WL.Damage()
 TWL = WL.Life()
-TWLh = WL.Lifeh()
+TWLs = WL.Lifes()
 ```
 For the history in study, this method return the respective results:
 ```
-DWL = 5.76e-09 per second
-TWL = 1.74e+07 cycles
-TWLh = 48206.58 hours
+DWL = 0.00130530261843453 per second
+TWL = 7.661058714486574 cycles
+TWLs = 766.1058714486574 seconds
 ```
 
 ## Tovo-Benasciutti (TB)
@@ -278,15 +275,17 @@ ds = sf/128
 s = np.arange(si, sf, ds)
 
 TB = Tovo_Benasciutti.TB(k, C, Gyy, f, xf, s)
+pTB = TB.PDF()
+
 DTB = TB.Damage()
 TTB = TB.Life()
-TTBh = TB.Lifeh()
+TTBs = TB.Lifes()
 ```
 For the history in study, this method return the respective results:
 ```
-DTB = 7.23e-09 per second
-TTB = 1.38e+07 cycles
-TTBh = 38414.58 hours
+DTB = 0.0009706076291897186 per second
+TTB = 10.302824436222686 cycles
+TTBs = 1030.282443622268 seconds
 ```
 
 ## <img src="https://render.githubusercontent.com/render/math?math=\alpha_{0.75}"> method (AL)
@@ -321,15 +320,17 @@ ds = sf/128
 s = np.arange(si, sf, ds)
 
 AL = alpha075.AL(k, C, Gyy, f, xf, s)
+pAL = AL.PDF()
+
 DAL = AL.Damage()
 TAL = AL.Life()
-TALh = AL.Lifeh()
+TALs = AL.Lifes()
 ```
 For the history in study, this method return the respective results:
 ```
-DAL = 7.18e-09 per second
-TAL = 1.39e+07 cycles
-TALh = 38671.59 hours
+DAL = 0.0010114366327434396 per second
+TAL = 9.886926848670504 cycles
+TALs = 988.6926848670504 seconds
 ```
 
 ## Dirlik
@@ -368,13 +369,13 @@ ps = DK.PDF()
 
 DDK = DK.Damage()
 TDK = DK.Life()
-TDKh = DK.Lifeh()
+TDKs = DK.Lifes()
 ```
 For the history in study, this method return the respective results:
 ```
-DDK = 7.21e-09 per second
-TDK = 1.38e+07 cycles
-TDKh = 38539.97 hours
+DDK = 0.000897359786515067 per second
+TDK = 11.143802241055845 cycles
+TDKs = 1114.3802241055845 seconds
 ```
 
 ## Zhao-Baker (ZB)
@@ -412,13 +413,13 @@ psZB = ZB.PDF()
 
 DZB = ZB.Damage()
 TZB = ZB.Life()
-TZBh = ZB.Lifeh()
+TZBs = ZB.Lifes()
 ```
 For the history in study, this method return the respective results:
 ```
-DZB = 7.15e-09 per second
-TZB = 1.39e+07 cycles
-TZBh = 38848.97 hours
+DZB = 0.0009079850858869257 per second
+TZB = 11.013396756657006 cycles
+TZBs = 1101.3396756657006 seconds
 ```
 
 ## Rainflow
@@ -446,13 +447,13 @@ RF = Rainflow.rainflowD(C, k, y, x)
 
 DRF = RF.Damage()
 TRF = RF.life()
-TRFh = RF.lifeh()
+TRFs = RF.lifes()
 ```
 For the history in study, this method return the respective results:
 ```
-DRF = 7.05e-09 per second
-TRF = 1.42e+07 cycles
-TRFh = 39389.11 hours
+DRF = 0.0008962822113232534 per second
+TRF = 11.157200124764495 cycles
+TRFs = 1115.720012476449 seconds
 ```
 
 You can compare the result of the methods with counting_cycles() method, present in Narrow_Band, Rice, Dirlik and Zhao_Baker modules as seen below:
@@ -460,27 +461,33 @@ You can compare the result of the methods with counting_cycles() method, present
 ```python
 import matplotlib.pyplot as plt
 
-S, nRF = RF.rainflow_histogram()
+S, nRF, pRF = RF.rainflow_histogram(nbins=70)
 
 nNB = NB.counting_cycles()
+nAL = AL.counting_cycles()
+nTB = TB.counting_cycles()
 nRC = RC.counting_cycles()
 nDK = DK.counting_cycles()
 nZB = ZB.counting_cycles()
 
 plt.figure("Comparison in same plot")
-plt.bar(S, p,width=round(max(S)*0.015, 1), color='white', edgecolor='black')
-plt.plot(s, nNB, linestyle=':',color='blue')
-plt.plot(s, nRC, linestyle='-.',color='red')
-plt.plot(s, ns, linestyle='-',color='black')
-plt.plot(s, nZB, linestyle='--',color='purple')
-plt.legend(("Narrow Band", "Rice", "Dirlik", "Zhao-Baker", "Rainflow"))
-plt.xlabel(r'Amplitude [MPa]')
+#plt.title(rf"$\alpha_{2} = {round(gammanum, 2)}$")
+plt.bar(S, nRF,width=round(max(S)*0.015, 1), color='white', edgecolor='black')
+plt.plot(s, nNB, linestyle=':')
+plt.plot(s, nAL, linestyle='--')
+plt.plot(s, nTB, linestyle='-.')
+plt.plot(s, nDK, linestyle='-')
+plt.plot(s, nZB, linestyle='--')
+
+plt.legend(("Rayleigh", r"$\alpha_{0.75}$", "Tovo-Benasciutti", "Dirlik", "Zhao-Baker", "Rainflow"))
+
+plt.xlabel(r'$S_{a}$ [MPa]')
 plt.ylabel(r'n [cycles]')
 plt.grid(True)
 plt.show()
 ```
 
-![Comparison between methods in frequency domain and Rainflow](image/Counting_cycles.png)
+![Comparison between methods in frequency domain and Rainflow](image/Counting_Cycles.png)
 
 It's possible to compare the methods with loading_spectrum as well.
 
@@ -488,19 +495,22 @@ It's possible to compare the methods with loading_spectrum as well.
 CC, Ss = RF.CumuCycles()
 
 CNB = NB.loading_spectrum()
-CRC = NB.loading_spectrum()
-CDK = NB.loading_spectrum()
-CZB = NB.loading_spectrum()
+CRC = RC.loading_spectrum()
+CAL = AL.loading_spectrum()
+CTB = TB.loading_spectrum()
+CDK = DK.loading_spectrum()
+CZB = ZB.loading_spectrum()
 
 plt.figure("Comparison between Cumulative Cycles")
 
-plt.semilogx(CC, S, marker='o')
 plt.semilogx(CNB, s, marker='D')
-plt.semilogx(CRC, s, marker='*')
-plt.semilogx(Cs, s, marker='^')
+plt.semilogx(CAL, s, marker='v')
+plt.semilogx(CTB, s, marker='*')
+plt.semilogx(CDK, s, marker='^')
 plt.semilogx(CZB, s, marker='s')
+plt.semilogx(CC, S, marker='o')
 
-plt.legend(("RF", "NB", "RC", "DK", "ZB"))
+plt.legend(("Rayleigh", r"$\alpha_{0.75}$", "Tovo-Benasciutti", "Dirlik", "Zhao-Baker", "Rainflow"))
 
 plt.xlabel('Cumulated Cycles [cycles]')
 plt.ylabel(r'S$_a$ [MPa]')
@@ -536,7 +546,7 @@ ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s)
 psZB = ZB.PDF()
 
 DZB = ZB.Damage()
-Dex = 7.00e-09
+Dex = 0.00087
 err = ZB.relative_error(y, method="Experimental", experimental_value = Dex)
 ```
 

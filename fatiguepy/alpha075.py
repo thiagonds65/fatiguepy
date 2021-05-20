@@ -13,9 +13,42 @@ class AL:
         self.f = f
         self.xf = xf
         self.s = s
-        moment = prob_moment.Probability_Moment(self.Y, self.f)
-        self.alpha075 = moment.alpha075()
-        self.DNB = Narrow_Band.NB(self.k, self.C, self.Y, self.f, self.xf, self.s).Damage()
+        moments = prob_moment.Probability_Moment(self.Y, self.f)
+        self.m0 = moments.moment0()
+        self.m1 = moments.moment1()
+        self.m2 = moments.moment2()
+        self.E0 = moments.E0()
+        self.alpha075 = moments.alpha075()
+        self.alpha1 = moments.alpha1()
+        self.alpha2 = moments.alpha2()
+        self.EP = moments.EP()
+        NB = Narrow_Band.NB(self.k, self.C, self.Y, self.f, self.xf, self.s)
+        self.DNB = NB.Damage()
+        self.pNB = NB.PDF()
+
+    def PDF(self):
+
+        lambdaAL = self.alpha075**2
+        pAL = lambdaAL*self.pNB
+
+        return pAL
+    
+    def counting_cycles(self):
+        pAL = self.PDF()
+        ds = self.s[1] - self.s[0]
+        nAL = pAL*ds*self.EP*self.xf
+
+        return nAL
+    
+    def loading_spectrum(self):
+        CAL = np.zeros(len(self.s))
+        nAL = self.counting_cycles()
+
+        for i in range(len(self.s)):
+            for j in range(i, len(self.s)):
+                CAL[i] += nAL[j]
+        
+        return CAL
 
     def Damage(self):
 

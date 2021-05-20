@@ -13,11 +13,45 @@ class TB:
         self.f = f
         self.xf = xf
         self.s = s
-        moment = prob_moment.Probability_Moment(self.Y, self.f)
-        self.alpha1 = prob_moment.Probability_Moment(self.Y, self.f).alpha1()
-        self.alpha2 = prob_moment.Probability_Moment(self.Y, self.f).alpha2()
-        self.E0 = prob_moment.Probability_Moment(self.Y, self.f).E0()
-        self.DNB = Narrow_Band.NB(self.k, self.C, self.Y, self.f, self.xf, self.s).Damage()
+        moments = prob_moment.Probability_Moment(self.Y, self.f)
+        self.m0 = moments.moment0()
+        self.m1 = moments.moment1()
+        self.m2 = moments.moment2()
+        self.E0 = moments.E0()
+        self.EP = moments.EP()
+        self.alpha1 = moments.alpha1()
+        self.alpha2 = moments.alpha2()
+        NB = Narrow_Band.NB(self.k, self.C, self.Y, self.f, self.xf, self.s)
+        self.DNB = NB.Damage()
+        self.pNB = NB.PDF()
+    
+    def PDF(self):
+        parameter = (self.alpha1 - self.alpha2)/(1 - self.alpha1)
+        b = min([1, parameter])
+
+        lambdaTB = (b + (1 - b) * self.alpha2**(self.k - 1))*self.alpha2
+        pTB = lambdaTB*self.pNB
+
+        # pTB = (self.s/(self.m0*self.alpha2**2))*np.exp(-self.s**2/(2*self.m0*self.alpha2**2))
+
+        return pTB
+    
+    def counting_cycles(self):
+        pTB = self.PDF()
+        ds = self.s[1] - self.s[0]
+        nTB = pTB*ds*self.EP*self.xf
+
+        return nTB
+    
+    def loading_spectrum(self):
+        CTB = np.zeros(len(self.s))
+        nTB = self.counting_cycles()
+
+        for i in range(len(self.s)):
+            for j in range(i, len(self.s)):
+                CTB[i] += nTB[j]
+        
+        return CTB
 
     def Damage(self):
         parameter = (self.alpha1 - self.alpha2)/(1 - self.alpha1)
