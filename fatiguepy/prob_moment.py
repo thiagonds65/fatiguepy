@@ -18,76 +18,25 @@ class Probability_Moment:
             without this (2*pi)
         '''
 
-    def moment0(self):
+    def momentn(self, n):
 
-        m0 = 0
+        mn = 0
 
         # Por Dirlik, mi = (1/2pi) integral (w^i)*G(w)dw de -inf até inf
 
         for i in range(0, len(self.f)):
             if self.f[i] >= 0:
-                m0 += self.Y[i]*self.df
+                mn += np.abs(self.Y[i]*(2*np.pi*self.f[i])**n)*self.df
 
-        return m0
-
-    def moment075(self):
-        m75 = 0
-
-        for i in range(0, len(self.f)):
-            if self.f[i] >= 0:
-                m75 += np.abs(self.Y[i] * (2*np.pi*self.f[i])**0.75)*self.df
-
-        return m75
-
-    def moment1(self):
-        m1 = 0
-
-        for i in range(0, len(self.f)):
-            if self.f[i] >= 0:
-                m1 += np.abs(self.Y[i] * 2*np.pi*self.f[i])*self.df
-
-        return m1
-
-    def moment15(self):
-        m15 = 0
-
-        for i in range(0, len(self.f)):
-            if self.f[i] >= 0:
-                m15 += np.abs(self.Y[i] * (2*np.pi*self.f[i])**1.5)*self.df
-
-        return m15
-
-    def moment2(self):
-        m2 = 0
-
-
-        for i in range(0, len(self.f)):
-            if self.f[i] >= 0:
-                m2 += np.abs(self.Y[i] * (2*np.pi*self.f[i]) ** 2)*self.df
-
-        return m2
-
-    def moment4(self):
-        m4 = 0
-
-        for i in range(0, len(self.f)):
-            if self.f[i] >= 0:
-                m4 += np.abs(self.Y[i] * (2*np.pi*self.f[i]) ** 4)*self.df
-
-        return m4
+        return mn
     
     def E0(self):
-        return np.sqrt(self.moment2()/self.moment0())/(2*np.pi)
+        return np.sqrt(self.momentn(2)/self.momentn(0))/(2*np.pi)
     
     def EP(self):
-        return np.sqrt(self.moment4()/self.moment2())/(2*np.pi)
+        return np.sqrt(self.momentn(4)/self.momentn(2))/(2*np.pi)
     
-    def alpha1(self):
-        return self.moment1()/np.sqrt(self.moment0()*self.moment2())
+    def alphan(self, n):
+        return self.momentn(n)/np.sqrt(self.momentn(0)*self.momentn(2*n))
 
-    def alpha2(self):
-        return self.moment2()/np.sqrt(self.moment0()*self.moment4())
-    
-    def alpha075(self):
-        return self.moment075()/np.sqrt(self.moment0()*self.moment15())
 

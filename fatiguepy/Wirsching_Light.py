@@ -14,8 +14,8 @@ class WL:
         self.xf = xf
         self.s = s
         moment = prob_moment.Probability_Moment(self.Y, self.f)
-        self.alpha2 = prob_moment.Probability_Moment(self.Y, self.f).alpha2()
-        self.E0 = prob_moment.Probability_Moment(self.Y, self.f).E0()
+        self.alpha2 = moment.alphan(2)
+        self.E0 = moment.E0()
         self.DNB = Narrow_Band.NB(self.k, self.C, self.Y, self.f, self.xf, self.s).Damage()
 
     def Damage(self):

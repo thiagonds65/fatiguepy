@@ -78,16 +78,16 @@ array of sample frequencies
 from fatiguepy import *
 moments = prob_moment.Probability_Moment(Gyy, f)
 
-m0 = moments.moment0()
-m1 = moments.moment1()
-m2 = moments.moment2()
-m4 = moments.moment4()
-m75 = moments.moment0dot75()
-m15 = moments.moment1dot5()
+m0 = moments.momentn(0)
+m1 = moments.momentn(1)
+m2 = moments.momentn(2)
+m4 = moments.momentn(4)
+m75 = moments.momentn(0.75)
+m15 = moments.momentn(1.5)
 
 E0 = moments.E0()
 EP = moments.EP()
-gamma = moments.alpha2()
+gamma = moments.alphan(2)
 ```
 
 Steel SAE 1015 was considered, so Python can perform the calculations.

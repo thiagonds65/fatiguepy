@@ -1,7 +1,5 @@
 import rainflow
-import matplotlib.pyplot as plt
 import numpy as np
-from . import prob_moment
 
 class rainflowD:
 
@@ -14,8 +12,8 @@ class rainflowD:
         self.y = y
         self.x = x
 
-    def rainflow_histogram(self):
-        cc = rainflow.count_cycles(self.y, nbins=50)
+    def rainflow_histogram(self, nbins=50):
+        cc = rainflow.count_cycles(self.y, nbins=nbins)
 
         r = []
         n = []
@@ -78,7 +76,7 @@ class rainflowD:
 
         rangemax = max(r) - min(r)
 
-        nclass = 50
+        nclass = nbins
 
         rangesm = []
         auxs = []
@@ -112,17 +110,16 @@ class rainflowD:
         bw = (min(r) + (rangemax/nclass)*(j+1)) - (min(r) + (rangemax/nclass)*(j))
 
         p = []
-        summ = 0
 
         for i in range(len(nmatrix)):
             p.append((nmatrix[i]/tns)/bw)
         
         #Finish here!!!!
 
-        return S, nmatrix
+        return S, nmatrix, p
 
-    def CumuCycles(self):
-        S, n = self.rainflow_histogram()
+    def CumuCycles(self, nbins=50):
+        S, n, p = self.rainflow_histogram(nbins=nbins)
         CumuC = np.zeros(len(S))
 
         for i in range(len(S)):
@@ -169,7 +166,7 @@ class rainflowD:
             DRF = DRF/max(self.x)
         '''
 
-        S, n = self.rainflow_histogram()
+        S, n, p = self.rainflow_histogram()
         DRF = 0
         for i in range(1,len(n)):
             Nf = self.C/(S[i]**self.k)

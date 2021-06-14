@@ -11,12 +11,12 @@ class DK:
         self.Y = Y
         self.f = f
         moments = prob_moment.Probability_Moment(self.Y, self.f)
-        self.m0 = moments.moment0()
-        self.m1 = moments.moment1()
-        self.m2 = moments.moment2()
-        self.m4 = moments.moment4()
-        if round(moments.alpha2(), 4) != 1.0:
-            self.alpha2 = moments.alpha2()
+        self.m0 = moments.momentn(0)
+        self.m1 = moments.momentn(1)
+        self.m2 = moments.momentn(2)
+        self.m4 = moments.momentn(4)
+        if round(moments.alphan(2), 4) != 1.0:
+            self.alpha2 = moments.alphan(2)
         else:
             self.alpha2 = 0.99
         self.k = k
@@ -113,3 +113,4 @@ class DK:
             raise UnboundLocalError("Invalid Method. Try method='Rainflow' or method='Experimental'")
 
         return err
+

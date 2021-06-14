@@ -16,11 +16,11 @@ class NB:
         self.f = f
         self.s = s
         moments = prob_moment.Probability_Moment(self.Y, self.f)
-        self.m0 = moments.moment0()
-        self.m1 = moments.moment1()
-        self.m2 = moments.moment2()
+        self.m0 = moments.momentn(0)
+        self.m1 = moments.momentn(1)
+        self.m2 = moments.momentn(2)
         self.E0 = moments.E0()
-        self.alpha2 = moments.alpha2()
+        self.alpha2 = moments.alphan(2)
         self.EP = moments.EP()
 
     def PDF(self):
