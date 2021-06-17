@@ -1,122 +1,68 @@
-import rainflow
+from collections import defaultdict
+import fatpack
 import numpy as np
 
 class rainflowD:
-
 
     def __init__(self, C, k, y, x):
         self.C = C
         self.k = k
         self.b = -1/k
         self.A = C**(1/k)
+        self.sigmaf = self.A/(2**self.b)
         self.y = y
         self.x = x
 
     def rainflow_histogram(self, nbins=50):
-        cc = rainflow.count_cycles(self.y, nbins=nbins)
+        # Preciso otimizar essa função inteira pra conseguir gerar o sm e o r do histórico. Tentar aprender a usar numba depois
+        r, sm = fatpack.find_rainflow_ranges(self.y, return_means=True, k=nbins)
 
-        r = []
-        n = []
-        for i in range(len(cc)):
-            r.append(cc[i][0]/2)
-            n.append(cc[i][1])
+        # Next create the bins to divide the stress ranges and means into
 
-        '''
-        nn = np.zeros(len(cc))
-        rng = np.zeros(len(cc))
-        nnn = np.zeros(len(cc))
-        rngrou = np.zeros(len(cc))
-    
-        for j in range(len(cc)):
-            nn[j] = cc[j][1]
-            rng[j] = cc[j][0]
-            for i in range(1, len(cc)):
-                if round(rng[i - 1], 4) == round(rng[j - 1], 4):
-                    rngrou[j] = round(rng[i], 4)
-                    nnn[j] += nn[i]
-        
+        bins_r = np.linspace(min(r), max(r), nbins)
+        bins_sm = np.linspace(min(sm), max(sm), nbins)
 
-        vl = []
-        pk = []
-        cnt = []
-        sa = []
-        sm = []
-        j = 0
-        with open('rainflow.txt', 'w') as file:
-            file.write("      Valley                Peak         Count           Sa                 Sm\n")
-            for valley, peak, count in rainflow.extract_cycles(self.y): 
-                #print(valley, peak, count)
-                vl.append(valley)
-                pk.append(peak)
-                cnt.append(count)
-                sa.append((pk[j]-vl[j])/2) 
-                sm.append((pk[j]+vl[j])/2)
-                
-                file.write(str(vl[j])+"    ")
-                file.write(str(pk[j])+"   ")
-                file.write(str(cnt[j])+"    ")
-                file.write(str(sa[j])+"    ")
-                file.write(str(sm[j])+" ")
-                file.write("\n")
-                
-                j+=1
+        # and establish the data array. Note that other datavectors vectors, e.g. 
+        # Smin and Smax, may also be used to create other data arrays and
+        # resulting rainflow matrices.
 
-        DRF = 0
-        Nf = []
-        s = []
-        n = []
-        sigmaf = self.A/(2**self.b)
-        for i in range(len(sa)):
-            s.append(sa[i]/(1-(sm[i]/sigmaf)))
-            n.append(cnt[i])
-        '''
+        data_array = np.array([sm, r]).T
 
-        # Begins here!!!!
-        tns = sum(n)
+        # Finally, establish the rainflow matrix from the data array and the
+        # specified row and column bins.
 
-        rangemax = max(r) - min(r)
+        n = fatpack.find_rainflow_matrix(data_array, bins_sm, bins_r)
+        n = n.sum(axis=0)
+        r = bins_r[0:-1]
+        S = (r/2)/(1-np.mean(self.y)/self.sigmaf)
+        # r = []
+        # n = []
+
+        # for i in range(len(cc)):
+        #     r.append(cc[i][0]/2)
+        #     n.append(cc[i][1])
+        #     # print(r[i], n[i])
+
+        # O código abaixo acho que está certo, porém preciso dar um jeito de fazê-lo ser mais rápido para obter os ranges e means de rainflow
+
+        rangemax = max(S) - min(S)
 
         nclass = nbins
+        tns = sum(n)
 
-        rangesm = []
-        auxs = []
-        smean = []
-
-        nmatrix = []
-        S = []
-        sigmaf = self.A/(2**self.b)
-
-        for j in range(nclass):
-            sumn = 0
-            for i in range(len(r)):
-                if(r[i] >= min(r) + (rangemax/nclass)*(j)  and r[i] < min(r) + (rangemax/nclass)*(j+1)):
-                    auxs.append(r[i])
-                    sumn += n[i]
-
-                if (r[i] == max(r) and j == nclass-1):
-                    auxs.append(r[i])
-                    sumn +=n[i]
-            
-            nmatrix.append(sumn)
-
-            smean.append((min(r) + (rangemax/nclass)*(j) + min(r) + (rangemax/nclass)*(j+1))/2)
-            rangesm.append(auxs[:])
-            auxs.clear()
-
-            S.append(smean[j]/(1-(self.y.mean()/sigmaf)))
-
-
-
-        bw = (min(r) + (rangemax/nclass)*(j+1)) - (min(r) + (rangemax/nclass)*(j))
+        bw = (min(S) + (rangemax/nclass)*(nclass+1)) - (min(S) + (rangemax/nclass)*(nclass))
 
         p = []
+        appendp = p.append
 
-        for i in range(len(nmatrix)):
-            p.append((nmatrix[i]/tns)/bw)
+        summ = 0
+        for i in range(len(n)):
+            appendp((n[i]/tns)/bw)
+            summ += p[i]*bw
         
         #Finish here!!!!
 
-        return S, nmatrix, p
+        return S, n, p
 
     def CumuCycles(self, nbins=50):
         S, n, p = self.rainflow_histogram(nbins=nbins)
@@ -169,7 +115,7 @@ class rainflowD:
         S, n, p = self.rainflow_histogram()
         DRF = 0
         for i in range(1,len(n)):
-            Nf = self.C/(S[i]**self.k)
+            Nf = 0.5*(S[i]/self.sigmaf)**(1/self.b)
             DRF += n[i]/Nf 
         
         return DRF/max(self.x)

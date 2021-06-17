@@ -13,7 +13,7 @@ This package can estimate fatigue life by 6 methods in frequency domain and a me
 * Dirlik
 * Zhao-Baker
 
-The package requires numpy, math and rainflow
+The package requires numpy, math and fatpack
 
 ## Instalation
 
