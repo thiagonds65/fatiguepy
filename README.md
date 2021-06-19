@@ -439,11 +439,13 @@ Stress History y
 
 <img src="https://render.githubusercontent.com/render/math?math=x"> (*ndarray*):
 time
+<img src="https://render.githubusercontent.com/render/math?math=nbins"> (*int*):
+number of bins
 
 The results can be obtained in the same way as the previous methods:
 
 ```python
-RF = Rainflow.rainflowD(C, k, y, x)
+RF = Rainflow.rainflowD(C, k, y, x, nbins=70)
 
 DRF = RF.Damage()
 TRF = RF.life()
@@ -461,7 +463,7 @@ You can compare the result of the methods with counting_cycles() method, present
 ```python
 import matplotlib.pyplot as plt
 
-S, nRF, pRF = RF.rainflow_histogram(nbins=70)
+S, nRF, pRF = RF.rainflow_histogram()
 
 nNB = NB.counting_cycles()
 nAL = AL.counting_cycles()

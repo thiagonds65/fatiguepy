@@ -4,7 +4,7 @@ import numpy as np
 
 class rainflowD:
 
-    def __init__(self, C, k, y, x):
+    def __init__(self, C, k, y, x, nbins=50):
         self.C = C
         self.k = k
         self.b = -1/k
@@ -12,15 +12,16 @@ class rainflowD:
         self.sigmaf = self.A/(2**self.b)
         self.y = y
         self.x = x
+        self.nbins = nbins
 
-    def rainflow_histogram(self, nbins=50):
+    def rainflow_histogram(self):
         # Preciso otimizar essa função inteira pra conseguir gerar o sm e o r do histórico. Tentar aprender a usar numba depois
-        r, sm = fatpack.find_rainflow_ranges(self.y, return_means=True, k=nbins)
+        r, sm = fatpack.find_rainflow_ranges(self.y, return_means=True, k=self.nbins)
 
         # Next create the bins to divide the stress ranges and means into
 
-        bins_r = np.linspace(min(r), max(r), nbins)
-        bins_sm = np.linspace(min(sm), max(sm), nbins)
+        bins_r = np.linspace(min(r), max(r), self.nbins)
+        bins_sm = np.linspace(min(sm), max(sm), self.nbins)
 
         # and establish the data array. Note that other datavectors vectors, e.g. 
         # Smin and Smax, may also be used to create other data arrays and
@@ -47,7 +48,7 @@ class rainflowD:
 
         rangemax = max(S) - min(S)
 
-        nclass = nbins
+        nclass = self.nbins
         tns = sum(n)
 
         bw = (min(S) + (rangemax/nclass)*(nclass+1)) - (min(S) + (rangemax/nclass)*(nclass))
@@ -64,8 +65,8 @@ class rainflowD:
 
         return S, n, p
 
-    def CumuCycles(self, nbins=50):
-        S, n, p = self.rainflow_histogram(nbins=nbins)
+    def CumuCycles(self):
+        S, n, p = self.rainflow_histogram()
         CumuC = np.zeros(len(S))
 
         for i in range(len(S)):
@@ -131,3 +132,4 @@ class rainflowD:
     def Life(self):
         TRF = self.Lifes()/max(self.x)
         return TRF
+
