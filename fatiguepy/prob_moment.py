@@ -24,9 +24,13 @@ class Probability_Moment:
 
         # Por Dirlik, mi = (1/2pi) integral (w^i)*G(w)dw de -inf até inf
 
-        for i in range(0, len(self.f)):
-            if self.f[i] >= 0:
-                mn += np.abs(self.Y[i]*(2*np.pi*self.f[i])**n)*self.df
+        mn = 0
+
+        # Por Dirlik, mi = (1/2pi) integral (w^i)*G(w)dw de -inf até inf
+        
+        # mn = np.sum([np.abs(self.Y[i]*(2*np.pi*self.f[i])**n)*self.df for i in range(len(self.f)) if self.f[i] >= 0])
+        mask = self.f >= 0
+        mn = np.sum(np.abs(self.Y[mask]*(2*np.pi*self.f[mask])**n)*self.df)
 
         return mn
     

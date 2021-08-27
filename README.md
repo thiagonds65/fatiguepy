@@ -1,5 +1,7 @@
 # Fatiguepy Package
 
+Since version 2.3.1, the calculation of spectral moments takes considerably less time.
+
 ## Available Methods
 This package can estimate fatigue life by 6 methods in frequency domain and a method in time domain:
 
