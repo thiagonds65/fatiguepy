@@ -15,7 +15,6 @@ class rainflowD:
         self.nbins = nbins
 
     def rainflow_histogram(self):
-        # Preciso otimizar essa função inteira pra conseguir gerar o sm e o r do histórico. Tentar aprender a usar numba depois
         r, sm = fatpack.find_rainflow_ranges(self.y, return_means=True, k=self.nbins)
 
         # Next create the bins to divide the stress ranges and means into
