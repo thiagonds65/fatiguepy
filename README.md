@@ -137,9 +137,11 @@ Array of sample stresses
 
 
 ```python
+nbins = 70
+
 si = 0.0
-sf = abs(max(y)-min(y))
-ds = sf/128
+sf = (max(y)-min(y))/2
+ds = sf/nbins
 s = np.arange(si, sf, ds)
 
 NB = Narrow_Band.NB(k, C, Gyy, f, xf, s)
@@ -147,7 +149,7 @@ pNB = NB.PDF()
 
 DNB = NB.Damage()
 TNB = NB.Life()
-TNBs = NB.Lifes()
+TNBs = NB.Lifeh()
 ```
 
 Damage returns the Damage by NB approach, Life returns the period until failure (in cycles) and Lifeh returns the life in hours.
@@ -186,16 +188,16 @@ Array of sample stresses
 
 ```python
 si = 0.0
-sf = abs(max(y)-min(y))
-ds = sf/128
+sf = (max(y)-min(y))/2
+ds = sf/nbins
 s = np.arange(si, sf, ds)
 
-RC = Narrow_Band.RC(k, C, Gyy, f, xf, s)
+RC = Rice.RC(k, C, Gyy, f, xf, s)
 pRC = RC.PDF()
 
 DRC = RC.Damage()
 TRC = RC.Life()
-TRCs = RC.Lifes()
+TRCs = RC.Lifeh()
 ```
 
 For the history in study, this method return the respective results:
@@ -230,14 +232,14 @@ Array of sample stresses
 
 ```python
 si = 0.0
-sf = abs(max(y)-min(y))
-ds = sf/128
+sf = (max(y)-min(y))/2
+ds = sf/nbins
 s = np.arange(si, sf, ds)
 
 WL = Wirsching_Light.WL(k, C, Gyy, f, xf, s)
 DWL = WL.Damage()
 TWL = WL.Life()
-TWLs = WL.Lifes()
+TWLs = WL.Lifeh()
 ```
 For the history in study, this method return the respective results:
 ```
@@ -272,8 +274,8 @@ Array of sample stresses
 
 ```python
 si = 0.0
-sf = abs(max(y)-min(y))
-ds = sf/128
+sf = (max(y)-min(y))/2
+ds = sf/nbins
 s = np.arange(si, sf, ds)
 
 TB = Tovo_Benasciutti.TB(k, C, Gyy, f, xf, s)
@@ -281,7 +283,7 @@ pTB = TB.PDF()
 
 DTB = TB.Damage()
 TTB = TB.Life()
-TTBs = TB.Lifes()
+TTBs = TB.Lifeh()
 ```
 For the history in study, this method return the respective results:
 ```
@@ -317,8 +319,8 @@ Array of sample stresses
 
 ```python
 si = 0.0
-sf = abs(max(y)-min(y))
-ds = sf/128
+sf = (max(y)-min(y))/2
+ds = sf/nbins
 s = np.arange(si, sf, ds)
 
 AL = alpha075.AL(k, C, Gyy, f, xf, s)
@@ -326,7 +328,7 @@ pAL = AL.PDF()
 
 DAL = AL.Damage()
 TAL = AL.Life()
-TALs = AL.Lifes()
+TALs = AL.Lifeh()
 ```
 For the history in study, this method return the respective results:
 ```
@@ -361,8 +363,8 @@ The functions for this method are analogous to the NB functions:
 
 ```python
 si = 0.0
-sf = abs(max(y)-min(y))
-ds = sf/128
+sf = (max(y)-min(y))/2
+ds = sf/nbins
 s = np.arange(si, sf, ds)
 
 DK = Dirlik.DK(k, C, Gyy, f, xf, s)
@@ -371,7 +373,7 @@ ps = DK.PDF()
 
 DDK = DK.Damage()
 TDK = DK.Life()
-TDKs = DK.Lifes()
+TDKs = DK.Lifeh()
 ```
 For the history in study, this method return the respective results:
 ```
@@ -406,16 +408,16 @@ The results can be obtained in the same way as the previous methods:
 
 ```python
 si = 0.0
-sf = abs(max(y)-min(y))
-ds = sf/128
+sf = (max(y)-min(y))/2
+ds = sf/nbins
 s = np.arange(si, sf, ds)
 
-ZB = Zhao_Baker.ZB(k, C, Gyy, w, xf, s)
+ZB = Zhao_Baker.ZB(k, C, Gyy, f, xf, s)
 psZB = ZB.PDF()
 
 DZB = ZB.Damage()
 TZB = ZB.Life()
-TZBs = ZB.Lifes()
+TZBs = ZB.Lifeh()
 ```
 For the history in study, this method return the respective results:
 ```
@@ -447,11 +449,11 @@ number of bins
 The results can be obtained in the same way as the previous methods:
 
 ```python
-RF = Rainflow.rainflowD(C, k, y, x, nbins=70)
+RF = Rainflow.rainflowD(C, k, y, x, nbins=nbins)
 
 DRF = RF.Damage()
-TRF = RF.life()
-TRFs = RF.lifes()
+TRF = RF.Life()
+TRFs = RF.Lifeh()
 ```
 For the history in study, this method return the respective results:
 ```
@@ -475,7 +477,6 @@ nDK = DK.counting_cycles()
 nZB = ZB.counting_cycles()
 
 plt.figure("Comparison in same plot")
-#plt.title(rf"$\alpha_{2} = {round(gammanum, 2)}$")
 plt.bar(S, nRF,width=round(max(S)*0.015, 1), color='white', edgecolor='black')
 plt.plot(s, nNB, linestyle=':')
 plt.plot(s, nAL, linestyle='--')
