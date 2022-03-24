@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 
 setup(name='fatiguepy',
-      version='2.3.1',
+      version='2.3.2',
       description='Package to estimate life of random fatigue history with frequency domain methods',
       long_description=long_description,
       long_description_content_type="text/markdown",
