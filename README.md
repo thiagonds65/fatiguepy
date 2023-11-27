@@ -11,7 +11,7 @@ This package can estimate fatigue life by 6 methods in frequency domain and a me
 * Rice
 * Wirsching-Light
 * Tovo-Benasciutti
-* <img src="https://render.githubusercontent.com/render/math?math=\alpha_{0.75}">
+* $\alpha_0.75$
 * Dirlik
 * Zhao-Baker
 
