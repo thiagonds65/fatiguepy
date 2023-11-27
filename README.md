@@ -11,7 +11,7 @@ This package can estimate fatigue life by 6 methods in frequency domain and a me
 * Rice
 * Wirsching-Light
 * Tovo-Benasciutti
-* $\alpha_0.75$
+* $\alpha_{0.75}$
 * Dirlik
 * Zhao-Baker
 
@@ -69,10 +69,10 @@ Once the PSD and frequency are obtained, just use the module present in the fati
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+$G_{yy}$ (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+$f$ (*ndarray*):
 array of sample frequencies
 
 
@@ -107,10 +107,10 @@ C = A ** k
 The damage intensity (Damage/unit of time) calculated by every method is given by the following equation:
 
 <p align=center>
-<img src="https://render.githubusercontent.com/render/math?math=\overline{D} = \nu_pC^{-1}\int_0^\infty s^k p_a(s) ds">
+$\overline{D} = \nu_pC^{-1}\int_0^\infty s^k p_a(s) ds$
 </p>
 
-Where <img src="https://render.githubusercontent.com/render/math?math=p_a"> is PDF of amplitude, k and C is material property, <img src="https://render.githubusercontent.com/render/math?math=\nu_p"> is equivalent to expected number of peaks and s is stress.
+Where $p_a$ is PDF of amplitude, k and C is material property, $\nu_p$ is equivalent to expected number of peaks and s is stress.
 
 ## Narrow Band (NB)
 
@@ -120,19 +120,19 @@ PDF returns the Probability Density Function of Narrow-Band Method, counting_cyc
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+$k$ (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+$C$ (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+$G_{yy}$ (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+$f$ (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+$s$ (*ndarray*):
 Array of sample stresses
 
 
@@ -170,19 +170,19 @@ PDF returns the Probability Density Function of Narrow-Band Method, counting_cyc
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+$k$ (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+$C$ (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+$G_{yy}$ (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+$f$ (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+$s$ (*ndarray*):
 Array of sample stresses
 
 
@@ -214,19 +214,19 @@ To this method, Wirsching and Light considered an width parameter to correct Nar
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+$k$ (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+$C$ (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+$G_{yy}$ (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+$f$ (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+$s$ (*ndarray*):
 Array of sample stresses
 
 
@@ -256,19 +256,19 @@ damage intensity limits. It can be done with the fatiguepy package as follows:
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+$k$ (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+$C$ (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+$G_{yy}$ (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+$f$ (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+$s$ (*ndarray*):
 Array of sample stresses
 
 
@@ -298,22 +298,22 @@ This method is a correction method based in a spectral parameter <img src="https
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+$k$ (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+$C$ (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+$G_{yy}$ (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+$f$ (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=xf"> (*float*):
+$xf$ (*float*):
 Observation period
 
-<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+$s$ (*ndarray*):
 Array of sample stresses
 
 
@@ -343,19 +343,19 @@ This method has long been considered to be one of the best and has already been 
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+$k$ (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+$C$ (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+$G_{yy}$ (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+$f$ (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+$s$ (*ndarray*):
 Array of sample stresses
 
 
@@ -388,19 +388,19 @@ This method combined theoretical assumptions and simulation results to give the 
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+$k$ (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+$C$ (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=G_{yy}"> (*ndarray*):
+$G_{yy}$ (*ndarray*):
 Power Spectral Density or Power Spectrum of Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=f"> (*ndarray*):
+$f$ (*ndarray*):
 Array of sample frequencies
 
-<img src="https://render.githubusercontent.com/render/math?math=s"> (*ndarray*):
+$s$ (*ndarray*):
 Array of sample stresses
 
 
@@ -432,18 +432,19 @@ If you want to calculate rainflow amplitude histogram, you can use the Rainflow 
 
 ### Parameters
 
-<img src="https://render.githubusercontent.com/render/math?math=C"> (*float*):
+$C$ (*float*):
 Constant of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=k"> (*float*):
+$k$ (*float*):
 Slope of SN Curve
 
-<img src="https://render.githubusercontent.com/render/math?math=y"> (*ndarray*):
+$y$ (*ndarray*):
 Stress History y
 
-<img src="https://render.githubusercontent.com/render/math?math=x"> (*ndarray*):
+$x$ (*ndarray*):
 time
-<img src="https://render.githubusercontent.com/render/math?math=nbins"> (*int*):
+
+$nbins$ (*int*):
 number of bins
 
 The results can be obtained in the same way as the previous methods:
